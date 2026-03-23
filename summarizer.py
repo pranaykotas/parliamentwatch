@@ -57,6 +57,9 @@ def _call_llm(prompt, provider=None, api_key=None, model=None, base_url=None):
         client_kwargs = {"api_key": effective_key}
         if effective_base_url:
             client_kwargs["base_url"] = effective_base_url
+        # Local models (Ollama) can be slow — give them more time
+        if effective_base_url and "localhost" in effective_base_url:
+            client_kwargs["timeout"] = 300.0  # 5 minutes
         client = OpenAI(**client_kwargs)
         response = client.chat.completions.create(
             model=m,
@@ -93,8 +96,12 @@ def summarize_report(text, committee_name, report_number, committee_key,
             preview += f"\n\n[... showing {preview_len} of {len(text)} characters. Provide an API key for full summary ...]"
         return preview
 
-    # Truncate very long reports to fit context window
-    max_chars = 400000
+    # Truncate to fit context window — local models have much smaller contexts
+    effective_base = base_url or LLM_BASE_URL
+    if effective_base and "localhost" in effective_base:
+        max_chars = 30000  # ~8K tokens, safe for most local models
+    else:
+        max_chars = 400000
     if len(text) > max_chars:
         text = text[:max_chars] + "\n\n[... text truncated due to length ...]"
 
@@ -135,5 +142,7 @@ Report text:
         print(f"  Summary saved to {summary_path}")
         return summary
     except Exception as e:
-        print(f"  Error summarizing report: {e}")
-        return None
+        error_msg = str(e)
+        print(f"  Error summarizing report: {error_msg}")
+        # Return error prefixed with marker so UI can detect and display it
+        return f"__ERROR__:{error_msg}"
