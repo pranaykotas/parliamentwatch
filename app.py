@@ -267,43 +267,82 @@ with st.sidebar.expander("Fetch / Refresh Data"):
 # --- Sidebar: BYOK LLM API Key ---
 st.sidebar.header("AI Summarization")
 st.sidebar.caption("Enter your own API key to enable AI-powered summaries. Your key is used only for this session and is never stored.")
-byok_provider = st.sidebar.selectbox(
+
+# Provider presets: (display_name, backend, default_model, base_url, needs_key)
+_PROVIDER_PRESETS = {
+    "Anthropic (Claude)": ("anthropic", "claude-sonnet-4-20250514", "", True),
+    "OpenAI (GPT)": ("openai", "gpt-4o", "", True),
+    "Google Gemini (free tier)": ("openai", "gemini-2.0-flash", "https://generativelanguage.googleapis.com/v1beta/openai/", True),
+    "Groq (free tier)": ("openai", "llama-3.3-70b-versatile", "https://api.groq.com/openai/v1", True),
+    "OpenRouter (free models)": ("openai", "meta-llama/llama-4-maverick:free", "https://openrouter.ai/api/v1", True),
+    "Ollama (local, no key)": ("openai", "llama3.2", "http://localhost:11434/v1", False),
+    "Custom (OpenAI-compatible)": ("openai", "", "", True),
+}
+
+byok_preset = st.sidebar.selectbox(
     "LLM Provider",
-    ["anthropic", "openai"],
-    key="byok_provider",
+    list(_PROVIDER_PRESETS.keys()),
+    key="byok_preset",
 )
-byok_api_key = st.sidebar.text_input(
-    "API Key",
-    type="password",
-    key="byok_api_key",
-    placeholder="Enter your API key",
-)
+_backend, _default_model, _default_url, _needs_key = _PROVIDER_PRESETS[byok_preset]
+
+# Show help text for specific providers
+if byok_preset == "Ollama (local, no key)":
+    st.sidebar.info("Requires [Ollama](https://ollama.com) running locally. Run `ollama pull llama3.2` first.")
+elif byok_preset == "Google Gemini (free tier)":
+    st.sidebar.info("Get a free API key at [Google AI Studio](https://aistudio.google.com/apikey). 15 requests/min, 1M tokens/day.")
+elif byok_preset == "Groq (free tier)":
+    st.sidebar.info("Get a free API key at [groq.com/keys](https://console.groq.com/keys). Very fast inference.")
+elif byok_preset == "OpenRouter (free models)":
+    st.sidebar.info("Get a free API key at [openrouter.ai/keys](https://openrouter.ai/keys). Access free open-source models.")
+
+if _needs_key:
+    byok_api_key = st.sidebar.text_input(
+        "API Key",
+        type="password",
+        key="byok_api_key",
+        placeholder="Enter your API key",
+    )
+else:
+    byok_api_key = "ollama"  # Ollama doesn't validate keys but the client needs a non-empty string
+
 byok_model = st.sidebar.text_input(
     "Model (optional)",
     key="byok_model",
-    placeholder="e.g. claude-sonnet-4-20250514, gpt-4o",
+    placeholder=_default_model,
 )
-byok_base_url = ""
-if byok_provider == "openai":
+
+if byok_preset == "Custom (OpenAI-compatible)":
     byok_base_url = st.sidebar.text_input(
-        "Base URL (optional)",
+        "Base URL",
         key="byok_base_url",
-        placeholder="For Gemini, Ollama, etc.",
+        placeholder="https://your-api-endpoint.com/v1",
     )
+else:
+    byok_base_url = _default_url
 
 
 def _get_byok_kwargs():
     """Return BYOK credentials dict to pass to summarize_report."""
+    _backend, _def_model, _def_url, _needs_key = _PROVIDER_PRESETS[
+        st.session_state.get("byok_preset", "Anthropic (Claude)")
+    ]
+    api_key = st.session_state.get("byok_api_key", "") if _needs_key else "ollama"
     return {
-        "api_key": st.session_state.get("byok_api_key", ""),
-        "provider": st.session_state.get("byok_provider", ""),
-        "model": st.session_state.get("byok_model", ""),
-        "base_url": st.session_state.get("byok_base_url", ""),
+        "api_key": api_key,
+        "provider": _backend,
+        "model": st.session_state.get("byok_model", "") or _def_model,
+        "base_url": st.session_state.get("byok_base_url", "") or _def_url,
     }
 
 
 def _has_api_key():
-    """Check if user has entered an API key in the sidebar."""
+    """Check if user has entered an API key or is using a keyless provider."""
+    _backend, _def_model, _def_url, needs_key = _PROVIDER_PRESETS[
+        st.session_state.get("byok_preset", "Anthropic (Claude)")
+    ]
+    if not needs_key:
+        return True  # Ollama doesn't need a key
     return bool(st.session_state.get("byok_api_key"))
 
 
