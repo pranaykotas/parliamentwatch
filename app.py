@@ -200,9 +200,14 @@ def show_report_dialog(r):
                         st.write(f"Extracted {len(text):,} characters")
                         st.write("Generating summary...")
                         summary = summarize_report(text, committee_name, report_num_str, committee_key, **_get_byok_kwargs())
-                        status.update(label="Done", state="complete")
-                        if summary:
+                        if summary and summary.startswith("__ERROR__:"):
+                            status.update(label="Error from LLM", state="error")
+                            st.error(summary.replace("__ERROR__:", ""))
+                        elif summary:
+                            status.update(label="Summary generated!", state="complete")
                             st.markdown(summary)
+                        else:
+                            status.update(label="LLM returned no response — check your API key and provider", state="error")
         else:
             st.info("Enter your LLM API key in the sidebar to extract and summarize this report.")
 
@@ -565,9 +570,13 @@ with tab_committee:
                                 st.write(f"Extracted {len(text):,} characters")
                                 st.write("Generating summary...")
                                 summary = summarize_report(text, selected_name, str(report_num), selected_key, **_get_byok_kwargs())
-                                status.update(label="Done", state="complete")
-                                if summary:
-                                    st.markdown(summary)
+                                if summary and summary.startswith("__ERROR__:"):
+                                    status.update(label="Error from LLM", state="error")
+                                    st.error(summary.replace("__ERROR__:", ""))
+                                elif summary:
+                                    status.update(label="Summary generated!", state="complete")
+                                else:
+                                    status.update(label="LLM returned no response — check your API key and provider", state="error")
             else:
                 st.caption("Enter your LLM API key in the sidebar to enable summarization.")
 
