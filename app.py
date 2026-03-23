@@ -22,6 +22,35 @@ st.set_page_config(
     layout="wide",
 )
 
+# --- Custom CSS ---
+st.markdown("""
+<style>
+    h1 {
+        color: #1B4F72;
+        border-bottom: 3px solid #1B4F72;
+        padding-bottom: 0.3em;
+    }
+    [data-testid="stMetric"] {
+        background-color: #F4F6F9;
+        border: 1px solid #D5DBDB;
+        border-radius: 8px;
+        padding: 12px 16px;
+    }
+    [data-testid="stSidebar"] {
+        border-right: 2px solid #1B4F72;
+    }
+    .attribution {
+        text-align: center;
+        padding: 2em 0 1em 0;
+        color: #6C757D;
+        font-size: 0.85em;
+        border-top: 1px solid #DEE2E6;
+        margin-top: 3em;
+    }
+    .attribution a { color: #1B4F72; text-decoration: none; }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("ParliamentWatch")
 st.caption("Track Indian Parliamentary Committee reports from sansad.in")
 
@@ -144,20 +173,23 @@ def show_report_dialog(r):
         with open(text_path, "r") as f:
             full_text = f.read()
         st.info("Text extracted but not yet summarized.")
-        if st.button("Generate Summary", key="dialog_gen_summary", type="primary"):
-            with st.status("Summarizing...", expanded=True) as status:
-                summary = summarize_report(full_text, committee_name, report_num_str, committee_key)
-                status.update(label="Done", state="complete")
-            if summary:
-                st.markdown(summary)
-                st.rerun()
+        if _has_api_key():
+            if st.button("Generate Summary", key="dialog_gen_summary", type="primary"):
+                with st.status("Summarizing...", expanded=True) as status:
+                    summary = summarize_report(full_text, committee_name, report_num_str, committee_key, **_get_byok_kwargs())
+                    status.update(label="Done", state="complete")
+                if summary:
+                    st.markdown(summary)
+                    st.rerun()
+        else:
+            st.info("Enter your LLM API key in the sidebar to generate a summary.")
         with st.expander("Full extracted text"):
             st.text_area("", full_text, height=400, disabled=True, label_visibility="collapsed")
 
     else:
         if not pdf_url:
             st.warning("No PDF URL available for this report.")
-        else:
+        elif _has_api_key():
             if st.button("Extract Text & Summarize", key="dialog_extract", type="primary"):
                 with st.status("Processing...", expanded=True) as status:
                     st.write("Downloading PDF...")
@@ -167,10 +199,12 @@ def show_report_dialog(r):
                     else:
                         st.write(f"Extracted {len(text):,} characters")
                         st.write("Generating summary...")
-                        summary = summarize_report(text, committee_name, report_num_str, committee_key)
+                        summary = summarize_report(text, committee_name, report_num_str, committee_key, **_get_byok_kwargs())
                         status.update(label="Done", state="complete")
                         if summary:
                             st.markdown(summary)
+        else:
+            st.info("Enter your LLM API key in the sidebar to extract and summarize this report.")
 
 
 def clickable_report_table(reports_list, table_key, show_committee=True):
@@ -228,6 +262,49 @@ with st.sidebar.expander("Fetch / Refresh Data"):
             total = sum(len(v) for v in results.values())
             status.update(label=f"Done — {total} reports fetched", state="complete")
         st.rerun()
+
+
+# --- Sidebar: BYOK LLM API Key ---
+st.sidebar.header("AI Summarization")
+st.sidebar.caption("Enter your own API key to enable AI-powered summaries. Your key is used only for this session and is never stored.")
+byok_provider = st.sidebar.selectbox(
+    "LLM Provider",
+    ["anthropic", "openai"],
+    key="byok_provider",
+)
+byok_api_key = st.sidebar.text_input(
+    "API Key",
+    type="password",
+    key="byok_api_key",
+    placeholder="Enter your API key",
+)
+byok_model = st.sidebar.text_input(
+    "Model (optional)",
+    key="byok_model",
+    placeholder="e.g. claude-sonnet-4-20250514, gpt-4o",
+)
+byok_base_url = ""
+if byok_provider == "openai":
+    byok_base_url = st.sidebar.text_input(
+        "Base URL (optional)",
+        key="byok_base_url",
+        placeholder="For Gemini, Ollama, etc.",
+    )
+
+
+def _get_byok_kwargs():
+    """Return BYOK credentials dict to pass to summarize_report."""
+    return {
+        "api_key": st.session_state.get("byok_api_key", ""),
+        "provider": st.session_state.get("byok_provider", ""),
+        "model": st.session_state.get("byok_model", ""),
+        "base_url": st.session_state.get("byok_base_url", ""),
+    }
+
+
+def _has_api_key():
+    """Check if user has entered an API key in the sidebar."""
+    return bool(st.session_state.get("byok_api_key"))
 
 
 # --- Main content: Tabs ---
@@ -418,22 +495,25 @@ with tab_committee:
 
             # Summarize button inline
             btn_key = f"summarize_{selected_key}_{report_num}"
-            if st.button("Extract & Summarize", key=btn_key, type="secondary"):
-                if not pdf_url:
-                    st.error("No PDF URL available.")
-                else:
-                    with st.status("Processing...", expanded=True) as status:
-                        st.write("Downloading PDF...")
-                        text = get_report_text(pdf_url, selected_key, str(report_num))
-                        if not text:
-                            status.update(label="Failed to extract text", state="error")
-                        else:
-                            st.write(f"Extracted {len(text):,} characters")
-                            st.write("Generating summary...")
-                            summary = summarize_report(text, selected_name, str(report_num), selected_key)
-                            status.update(label="Done", state="complete")
-                            if summary:
-                                st.markdown(summary)
+            if _has_api_key():
+                if st.button("Extract & Summarize", key=btn_key, type="secondary"):
+                    if not pdf_url:
+                        st.error("No PDF URL available.")
+                    else:
+                        with st.status("Processing...", expanded=True) as status:
+                            st.write("Downloading PDF...")
+                            text = get_report_text(pdf_url, selected_key, str(report_num))
+                            if not text:
+                                status.update(label="Failed to extract text", state="error")
+                            else:
+                                st.write(f"Extracted {len(text):,} characters")
+                                st.write("Generating summary...")
+                                summary = summarize_report(text, selected_name, str(report_num), selected_key, **_get_byok_kwargs())
+                                status.update(label="Done", state="complete")
+                                if summary:
+                                    st.markdown(summary)
+            else:
+                st.caption("Enter your LLM API key in the sidebar to enable summarization.")
 
             # Show cached summary if available
             if has_summary(selected_key, report_num):
@@ -715,3 +795,12 @@ with tab_export:
                 file_name="parliamentwatch_fulltext.txt",
                 mime="text/plain",
             )
+
+# --- Attribution footer ---
+st.markdown(
+    '<div class="attribution">'
+    'Created by <strong>Pranay Kotasthane</strong> using Claude Opus &nbsp;|&nbsp; '
+    '<a href="https://github.com/pranaykotas/parliamentwatch" target="_blank">GitHub</a>'
+    '</div>',
+    unsafe_allow_html=True,
+)
