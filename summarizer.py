@@ -24,66 +24,59 @@ def get_cached_summary(committee_key, report_number):
     return None
 
 
-def _call_llm(prompt):
+def _call_llm(prompt, provider=None, api_key=None, model=None, base_url=None):
     """
     Call the configured LLM provider and return the response text.
 
-    Supports two backends:
-      - "anthropic": uses the Anthropic SDK (default)
-      - "openai": uses the OpenAI SDK, works with OpenAI, Gemini, Ollama, etc.
-
-    Returns response text, or None on failure.
+    Accepts optional overrides (for BYOK); falls back to config/.env values.
     """
-    api_key = LLM_API_KEY
-    if not api_key or api_key == "your-api-key-here":
+    effective_key = api_key or LLM_API_KEY
+    effective_provider = (provider or LLM_PROVIDER).lower()
+    effective_model = model or LLM_MODEL
+    effective_base_url = base_url or LLM_BASE_URL
+
+    if not effective_key or effective_key == "your-api-key-here":
         return None
 
-    provider = LLM_PROVIDER.lower()
-
-    if provider == "anthropic":
+    if effective_provider == "anthropic":
         from anthropic import Anthropic
-        model = LLM_MODEL or "claude-sonnet-4-20250514"
-        print(f"  Using Anthropic ({model})...")
-        client = Anthropic(api_key=api_key)
+        m = effective_model or "claude-sonnet-4-20250514"
+        print(f"  Using Anthropic ({m})...")
+        client = Anthropic(api_key=effective_key)
         message = client.messages.create(
-            model=model,
+            model=m,
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}],
         )
         return message.content[0].text
 
-    elif provider == "openai":
+    elif effective_provider == "openai":
         from openai import OpenAI
-        model = LLM_MODEL or "gpt-4o"
-        print(f"  Using OpenAI-compatible ({model})...")
-        client_kwargs = {"api_key": api_key}
-        if LLM_BASE_URL:
-            client_kwargs["base_url"] = LLM_BASE_URL
+        m = effective_model or "gpt-4o"
+        print(f"  Using OpenAI-compatible ({m})...")
+        client_kwargs = {"api_key": effective_key}
+        if effective_base_url:
+            client_kwargs["base_url"] = effective_base_url
         client = OpenAI(**client_kwargs)
         response = client.chat.completions.create(
-            model=model,
+            model=m,
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}],
         )
         return response.choices[0].message.content
 
     else:
-        print(f"  Unknown LLM_PROVIDER: {provider}. Use 'anthropic' or 'openai'.")
+        print(f"  Unknown LLM_PROVIDER: {effective_provider}. Use 'anthropic' or 'openai'.")
         return None
 
 
-def summarize_report(text, committee_name, report_number, committee_key):
+def summarize_report(text, committee_name, report_number, committee_key,
+                     api_key=None, provider=None, model=None, base_url=None):
     """
     Summarize a report using the configured LLM.
 
-    Args:
-        text: Full text of the report
-        committee_name: Full committee name (for context)
-        report_number: Report number/identifier
-        committee_key: Short key for caching
-
-    Returns:
-        Summary string, or None on failure.
+    Accepts optional BYOK credentials that override config/.env values.
+    CLI usage (no overrides) falls back to .env configuration.
     """
     # Check cache first
     cached = get_cached_summary(committee_key, report_number)
@@ -91,15 +84,13 @@ def summarize_report(text, committee_name, report_number, committee_key):
         print(f"  Summary already cached for {committee_key}/{report_number}")
         return cached
 
-    api_key = LLM_API_KEY
-    if not api_key or api_key == "your-api-key-here":
+    effective_key = api_key or LLM_API_KEY
+    if not effective_key or effective_key == "your-api-key-here":
         print("  No LLM API key set. Showing text preview instead.")
-        print("  (Set LLM_API_KEY in .env, or ANTHROPIC_API_KEY for Claude)\n")
-        # Return a preview of the text as fallback
         preview_len = 2000
         preview = text[:preview_len]
         if len(text) > preview_len:
-            preview += f"\n\n[... showing {preview_len} of {len(text)} characters. Set API key for full summary ...]"
+            preview += f"\n\n[... showing {preview_len} of {len(text)} characters. Provide an API key for full summary ...]"
         return preview
 
     # Truncate very long reports to fit context window
@@ -127,7 +118,8 @@ Report text:
 
     print(f"  Summarizing report {report_number}...")
     try:
-        summary = _call_llm(prompt)
+        summary = _call_llm(prompt, provider=provider, api_key=api_key,
+                            model=model, base_url=base_url)
 
         if not summary:
             print("  LLM returned no response.")
