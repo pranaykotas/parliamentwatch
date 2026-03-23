@@ -266,7 +266,7 @@ with st.sidebar.expander("Fetch / Refresh Data"):
 
 # --- Sidebar: BYOK LLM API Key ---
 st.sidebar.header("AI Summarization")
-st.sidebar.caption("Enter your own API key to enable AI-powered summaries. Your key is used only for this session and is never stored.")
+st.sidebar.caption("Bring your own API key to enable AI-powered summaries.")
 
 # Provider presets: (display_name, backend, default_model, base_url, needs_key)
 _PROVIDER_PRESETS = {
@@ -320,6 +320,23 @@ if byok_preset == "Custom (OpenAI-compatible)":
     )
 else:
     byok_base_url = _default_url
+
+# Privacy notice and clear button
+if _needs_key and st.session_state.get("byok_api_key"):
+    if st.sidebar.button("Clear API Key", type="secondary", use_container_width=True):
+        st.session_state["byok_api_key"] = ""
+        st.rerun()
+
+st.sidebar.markdown(
+    '<div style="font-size: 0.75em; color: #6C757D; line-height: 1.4; margin-top: 0.5em;">'
+    '🔒 <strong>Privacy:</strong> Your API key stays in your browser session memory only. '
+    'It is sent directly to your chosen LLM provider and nowhere else. '
+    'Nothing is logged, stored on disk, or transmitted to our servers. '
+    'The key is automatically erased when you close this tab. '
+    '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #1B4F72;">'
+    'Verify in source code</a>.</div>',
+    unsafe_allow_html=True,
+)
 
 
 def _get_byok_kwargs():
