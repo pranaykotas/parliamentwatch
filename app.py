@@ -374,6 +374,23 @@ with st.sidebar.expander("Fetch / Refresh Data"):
             status.update(label=f"Done — {total} reports fetched", state="complete")
         st.rerun()
 
+    st.divider()
+    st.caption("Download reports from multiple Lok Sabhas at once. Data is merged — nothing gets overwritten.")
+    historical_range = st.slider("Lok Sabha range", min_value=14, max_value=18, value=(14, 18), key="hist_range")
+    if st.button("Fetch All Historical Data", type="secondary"):
+        ls_start, ls_end = historical_range
+        ls_numbers = list(range(ls_start, ls_end + 1))
+        total_steps = len(ls_numbers)
+        with st.status(f"Fetching LS {ls_start}–{ls_end} (all committees, both houses)...", expanded=True) as status:
+            grand_total = 0
+            for idx, ls_num in enumerate(ls_numbers):
+                st.write(f"Fetching Lok Sabha {ls_num}... ({idx + 1}/{total_steps})")
+                results = scrape_all_committees(lok_sabha=ls_num, both_houses=True)
+                count = sum(len(v) for v in results.values())
+                grand_total += count
+            status.update(label=f"Done — {grand_total} reports across LS {ls_start}–{ls_end}", state="complete")
+        st.rerun()
+
 
 # --- Sidebar: AI Summarization ---
 # Provider presets: (backend, default_model, base_url, needs_key)
