@@ -527,8 +527,8 @@ def filter_by_lok_sabha(reports_dict, ls_number):
     return filtered
 
 
-tab_dashboard, tab_committee, tab_search, tab_export = st.tabs([
-    "Dashboard", "Committee Deep Dive", "Search", "Export"
+tab_dashboard, tab_committee, tab_search, tab_export, tab_why = st.tabs([
+    "Dashboard", "Committee Deep Dive", "Search", "Export", "The Why?"
 ])
 
 
@@ -1077,6 +1077,60 @@ with tab_export:
                 file_name="parliamentwatch_fulltext.txt",
                 mime="text/plain",
             )
+
+# ============================================================
+# TAB 5: The Why?
+# ============================================================
+with tab_why:
+    st.subheader("Why ParliamentWatch?")
+
+    st.markdown("""
+### Parliamentary Committees: The Legislature's Check on the Executive
+
+In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are
+the most robust institutional mechanism through which the legislature exercises control over the
+executive. There are **16 DRSCs**, each shadowing a cluster of central government ministries.
+Together, they cover every arm of the Union Government.
+
+These committees examine:
+- **Demands for Grants** — scrutinising how each ministry proposes to spend public money
+- **Bills** referred to them by Parliament — providing detailed clause-by-clause analysis
+- **Policy subjects** — investigating issues of national importance on their own initiative
+
+Their reports are non-partisan, evidence-based documents that draw on testimonies from
+government officials, domain experts, and field visits. Unlike floor debates, committee
+proceedings allow for sustained, in-depth engagement with policy questions.
+
+**Yet these reports remain under-accessed.** They are buried across government websites with
+no unified search, no alerts for new publications, and no easy way to quickly grasp
+what a 200-page PDF says. ParliamentWatch aims to change that.
+
+---
+
+### What Makes This Tool Different
+
+- **Unified access** to all 16 DRSCs across both Lok Sabha and Rajya Sabha, with historical data going back multiple Lok Sabhas
+- **Full-text search** across extracted report PDFs — not just titles
+- **AI-powered summaries** using your own API key (Bring Your Own Key) — choose from free providers like Ollama, Gemini, or Groq, or paid ones like Claude and GPT
+- **Daily email alerts** when new reports are published, via GitHub Actions
+- **Batch operations** — fetch all historical data and summarise entire committees in one click
+- **Export everything** — metadata, summaries, and full text in CSV or Markdown
+- **Fully open source** — verify every line of code, contribute improvements, or fork it for your own use
+
+---
+
+### Official Sources and Further Reading
+
+For the **official repository** of parliamentary documents, visit:
+
+**[ePARLIB — eParliament Library](https://eparlib.sansad.in/)** — the government's digital archive of parliamentary papers, including committee reports, debates, questions, and more.
+
+For **excellent analytical deep-dives** into parliamentary functioning, committee performance, and legislative tracking:
+
+**[PRS Legislative Research](https://prsindia.org/)** — an independent research organisation that tracks Parliament, analyses Bills and committee reports, and publishes accessible summaries and data. If you want expert commentary on what these committees are doing, PRS is the gold standard.
+
+ParliamentWatch complements these resources by making it easier to *discover*, *search*, and *summarise* committee reports using AI — bridging the gap between raw government data and actionable insights.
+""")
 
 # --- Attribution footer ---
 st.markdown(
