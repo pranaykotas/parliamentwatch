@@ -119,24 +119,31 @@ def scrape_all_committees(committee_keys=None, lok_sabha=None, house="L", both_h
             print(f"  Unknown committee: {key}")
             continue
 
-        merged = {}
+        # Build index of existing reports by (report_number, lok_sabha) for merging
+        existing_reports = {
+            (r.get("report_number"), r.get("lok_sabha")): r
+            for r in all_reports.get(key, [])
+        }
+
         for h in houses:
             reports = fetch_committee_reports(key, lok_sabha, h)
             for r in reports:
-                # Dedup by report_number — prefer the one with a presentation date
-                rnum = r.get("report_number")
-                if rnum not in merged:
-                    merged[rnum] = r
+                rid = (r.get("report_number"), r.get("lok_sabha"))
+                if rid not in existing_reports:
+                    existing_reports[rid] = r
                 else:
-                    # Keep the one that has more date info
-                    existing = merged[rnum]
+                    # Merge date info from both houses
+                    existing = existing_reports[rid]
                     if not existing.get("presented_in_ls") and r.get("presented_in_ls"):
-                        merged[rnum] = r
-                    elif not existing.get("laid_in_rs") and r.get("laid_in_rs"):
-                        # Merge the laid_in_rs date into existing
+                        existing["presented_in_ls"] = r["presented_in_ls"]
+                    if not existing.get("laid_in_rs") and r.get("laid_in_rs"):
                         existing["laid_in_rs"] = r["laid_in_rs"]
 
-        all_reports[key] = sorted(merged.values(), key=lambda x: x.get("report_number", 0), reverse=True)
+        all_reports[key] = sorted(
+            existing_reports.values(),
+            key=lambda x: (x.get("lok_sabha", 0), x.get("report_number", 0)),
+            reverse=True,
+        )
 
     save_reports(all_reports)
     return all_reports
@@ -177,9 +184,20 @@ def detect_new_reports(committee_keys=None):
 
         updated[key] = fresh
 
-    # Update stored data with the latest
+    # Merge new data without overwriting other Lok Sabhas
     all_reports = load_existing_reports()
-    all_reports.update(updated)
+    for key, fresh_list in updated.items():
+        existing = {
+            (r.get("report_number"), r.get("lok_sabha")): r
+            for r in all_reports.get(key, [])
+        }
+        for r in fresh_list:
+            existing[(r.get("report_number"), r.get("lok_sabha"))] = r
+        all_reports[key] = sorted(
+            existing.values(),
+            key=lambda x: (x.get("lok_sabha", 0), x.get("report_number", 0)),
+            reverse=True,
+        )
     save_reports(all_reports)
 
     return new_reports

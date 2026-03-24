@@ -114,10 +114,11 @@ def get_report_date(report):
 def classify_report(title):
     """Classify a report into a category based on its title."""
     t = title.lower()
-    if "demand" in t or "grant" in t or "budget" in t:
-        return "Demand for Grants"
+    # Check "action taken" first — many are "action taken on Demands for Grants"
     if "action taken" in t:
         return "Action Taken"
+    if "demand" in t or "grant" in t or "budget" in t:
+        return "Demand for Grants"
     if "assurance" in t:
         return "Assurances"
     if "bill" in t:
@@ -490,6 +491,25 @@ if not has_data():
 
 all_reports = load_existing_reports()
 
+# Collect all Lok Sabha numbers present in data
+_all_ls_numbers = sorted(set(
+    r.get("lok_sabha") for reports in all_reports.values()
+    for r in reports if r.get("lok_sabha")
+), reverse=True)
+
+
+def filter_by_lok_sabha(reports_dict, ls_number):
+    """Filter a reports dict to only include reports from a specific Lok Sabha, or all."""
+    if ls_number == "All":
+        return reports_dict
+    filtered = {}
+    for key, reports in reports_dict.items():
+        matching = [r for r in reports if r.get("lok_sabha") == ls_number]
+        if matching:
+            filtered[key] = matching
+    return filtered
+
+
 tab_dashboard, tab_committee, tab_search, tab_export = st.tabs([
     "Dashboard", "Committee Deep Dive", "Search", "Export"
 ])
@@ -499,14 +519,22 @@ tab_dashboard, tab_committee, tab_search, tab_export = st.tabs([
 # TAB 1: Dashboard
 # ============================================================
 with tab_dashboard:
+    # Lok Sabha filter
+    if len(_all_ls_numbers) > 1:
+        dash_ls_options = ["All"] + _all_ls_numbers
+        dash_ls_filter = st.selectbox("Lok Sabha", dash_ls_options, key="dash_ls_filter")
+    else:
+        dash_ls_filter = "All"
+    dash_reports = filter_by_lok_sabha(all_reports, dash_ls_filter)
+
     # Top-level metrics
-    total_reports = sum(len(v) for v in all_reports.values())
-    committees_with_data = sum(1 for v in all_reports.values() if v)
+    total_reports = sum(len(v) for v in dash_reports.values())
+    committees_with_data = sum(1 for v in dash_reports.values() if v)
 
     # Find recent reports (last 60 days)
     recent_cutoff = datetime.now() - timedelta(days=60)
     recent_reports = []
-    for reports in all_reports.values():
+    for reports in dash_reports.values():
         for r in reports:
             d = get_report_date(r)
             if d and d >= recent_cutoff:
@@ -521,7 +549,8 @@ with tab_dashboard:
     with col3:
         st.metric("Recent (60 days)", len(recent_reports))
     with col4:
-        st.metric("Lok Sabha", CURRENT_LOK_SABHA)
+        ls_label = f"LS {dash_ls_filter}" if dash_ls_filter != "All" else f"All ({len(_all_ls_numbers)} LS)"
+        st.metric("Lok Sabha", ls_label)
 
     # What's New section
     st.subheader("Recent Reports")
@@ -538,7 +567,7 @@ with tab_dashboard:
     committee_rows = []
     for key in sorted(DRSC_COMMITTEES.keys()):
         info = DRSC_COMMITTEES[key]
-        reports = all_reports.get(key, [])
+        reports = dash_reports.get(key, [])
         if not reports:
             committee_rows.append({
                 "Committee": info["name"],
@@ -589,9 +618,19 @@ with tab_committee:
         st.warning("No committee data found. Fetch data using the sidebar.")
         st.stop()
 
-    selected_name = st.selectbox("Select Committee", list(committee_options.keys()), key="dive_committee")
+    dive_sel_col1, dive_sel_col2 = st.columns([3, 1])
+    with dive_sel_col1:
+        selected_name = st.selectbox("Select Committee", list(committee_options.keys()), key="dive_committee")
+    with dive_sel_col2:
+        if len(_all_ls_numbers) > 1:
+            dive_ls_options = ["All"] + _all_ls_numbers
+            dive_ls_filter = st.selectbox("Lok Sabha", dive_ls_options, key="dive_ls_filter")
+        else:
+            dive_ls_filter = "All"
     selected_key = committee_options[selected_name]
     reports = all_reports[selected_key]
+    if dive_ls_filter != "All":
+        reports = [r for r in reports if r.get("lok_sabha") == dive_ls_filter]
 
     # Committee stats
     col1, col2, col3, col4 = st.columns(4)
@@ -745,7 +784,7 @@ with tab_committee:
 with tab_search:
     st.subheader("Search Reports")
 
-    search_col1, search_col2, search_col3 = st.columns([3, 1, 1])
+    search_col1, search_col2, search_col3, search_col4 = st.columns([3, 1, 1, 0.5])
     with search_col1:
         query = st.text_input("Search reports", placeholder="e.g. semiconductor, grants, procurement, border roads", key="search_query")
     with search_col2:
@@ -756,6 +795,11 @@ with tab_search:
         )
     with search_col3:
         search_scope = st.selectbox("Search in", ["Titles only", "Titles + Full text"], key="search_scope")
+    with search_col4:
+        if len(_all_ls_numbers) > 1:
+            search_ls_filter = st.selectbox("LS", ["All"] + _all_ls_numbers, key="search_ls_filter")
+        else:
+            search_ls_filter = "All"
 
     if query:
         filter_key = None
@@ -764,6 +808,8 @@ with tab_search:
 
         # Title search
         title_results = search_reports(query, filter_key)
+        if search_ls_filter != "All":
+            title_results = [r for r in title_results if r.get("lok_sabha") == search_ls_filter]
         title_ids = {(r.get("committee"), r.get("report_number")) for r in title_results}
 
         # Full-text search
@@ -800,6 +846,9 @@ with tab_search:
                                     break
                     except Exception:
                         continue
+
+        if search_ls_filter != "All":
+            fulltext_results = [r for r in fulltext_results if r.get("lok_sabha") == search_ls_filter]
 
         total_results = len(title_results) + len(fulltext_results)
         if total_results > 0:
