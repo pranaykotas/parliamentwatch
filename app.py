@@ -48,6 +48,40 @@ st.markdown("""
         margin-top: 3em;
     }
     .attribution a { color: #1B4F72; text-decoration: none; }
+    .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        font-weight: 600;
+        color: white;
+        margin-right: 4px;
+    }
+    .badge-dfg { background-color: #2E86C1; }
+    .badge-action { background-color: #28B463; }
+    .badge-assurance { background-color: #AF7AC5; }
+    .badge-bill { background-color: #E74C3C; }
+    .badge-subject { background-color: #85929E; }
+    .welcome-box {
+        text-align: center;
+        padding: 3em 2em;
+        background: linear-gradient(135deg, #F4F6F9 0%, #E8EDF2 100%);
+        border-radius: 12px;
+        border: 1px solid #D5DBDB;
+        margin: 2em 0;
+    }
+    .welcome-box h2 { color: #1B4F72; margin-bottom: 0.5em; }
+    .progress-bar-bg {
+        background-color: #E5E8E8;
+        border-radius: 4px;
+        height: 8px;
+        width: 100%;
+    }
+    .progress-bar-fill {
+        background-color: #2E86C1;
+        border-radius: 4px;
+        height: 8px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -91,6 +125,49 @@ def classify_report(title):
     return "Subject Report"
 
 
+_BADGE_CSS_CLASS = {
+    "Demand for Grants": "badge-dfg",
+    "Action Taken": "badge-action",
+    "Assurances": "badge-assurance",
+    "Bills": "badge-bill",
+    "Subject Report": "badge-subject",
+}
+
+
+def category_badge(title):
+    """Return an HTML badge for the report category."""
+    cat = classify_report(title)
+    css = _BADGE_CSS_CLASS.get(cat, "badge-subject")
+    return f'<span class="badge {css}">{cat}</span>'
+
+
+def get_summary_preview(committee_key, report_number, max_chars=150):
+    """Return first few lines of a cached summary, or None."""
+    safe_name = str(report_number).replace("/", "-").replace(" ", "_")
+    path = os.path.join(SUMMARIES_DIR, committee_key, f"{safe_name}.md")
+    if os.path.exists(path):
+        try:
+            with open(path, "r") as f:
+                text = f.read(max_chars + 50)
+            # Get first meaningful lines
+            lines = [l.strip() for l in text.split("\n") if l.strip() and not l.startswith("#")]
+            preview = " ".join(lines)[:max_chars]
+            if len(text) > max_chars:
+                preview += "..."
+            return preview
+        except Exception:
+            pass
+    return None
+
+
+def committee_progress(committee_key, reports):
+    """Return (extracted_count, summarized_count, total) for a committee."""
+    total = len(reports)
+    extracted = sum(1 for r in reports if has_text(committee_key, r.get("report_number", 0)))
+    summarized = sum(1 for r in reports if has_summary(committee_key, r.get("report_number", 0)))
+    return extracted, summarized, total
+
+
 def has_data():
     """Check if we have any scraped data."""
     return os.path.exists(REPORTS_JSON) and os.path.getsize(REPORTS_JSON) > 10
@@ -130,12 +207,12 @@ def show_report_dialog(r):
     pdf_url = r.get("pdf_url", "")
 
     st.markdown(f"### {r.get('title', 'No title')}")
+    st.markdown(category_badge(r.get("title", "")), unsafe_allow_html=True)
 
     col_a, col_b = st.columns(2)
     with col_a:
         st.write(f"**Committee:** {committee_name}")
         st.write(f"**Report #:** {report_num}")
-        st.write(f"**Category:** {classify_report(r.get('title', ''))}")
         house = "Lok Sabha" if r.get("house") == "L" else ("Rajya Sabha" if r.get("house") == "R" else "—")
         st.write(f"**House:** {house} | **Lok Sabha:** {r.get('lok_sabha', '—')}")
     with col_b:
@@ -159,7 +236,28 @@ def show_report_dialog(r):
         safe_name = report_num_str.replace("/", "-").replace(" ", "_")
         summary_path = os.path.join(SUMMARIES_DIR, committee_key, f"{safe_name}.md")
         with open(summary_path, "r") as f:
-            st.markdown(f.read())
+            summary_content = f.read()
+        st.markdown(summary_content)
+
+        # Download buttons for summary
+        dl_col1, dl_col2 = st.columns(2)
+        with dl_col1:
+            st.download_button(
+                "Download Summary (Markdown)",
+                data=summary_content,
+                file_name=f"summary_{committee_key}_{safe_name}.md",
+                mime="text/markdown",
+                key="dialog_dl_md",
+            )
+        with dl_col2:
+            st.download_button(
+                "Download Summary (Text)",
+                data=summary_content,
+                file_name=f"summary_{committee_key}_{safe_name}.txt",
+                mime="text/plain",
+                key="dialog_dl_txt",
+            )
+
         # Also show full text in an expander if available
         if has_text(committee_key, report_num):
             text_path = os.path.join(TEXT_DIR, committee_key, f"{safe_name}.txt")
@@ -212,7 +310,7 @@ def show_report_dialog(r):
             st.info("Enter your LLM API key in the sidebar to extract and summarize this report.")
 
 
-def clickable_report_table(reports_list, table_key, show_committee=True):
+def clickable_report_table(reports_list, table_key, show_committee=True, show_preview=False):
     """Render a report table with clickable titles that open a details dialog."""
     if not reports_list:
         return
@@ -221,7 +319,8 @@ def clickable_report_table(reports_list, table_key, show_committee=True):
         report_num = r.get("report_number", "?")
         title = r.get("title", "No title")
         date = r.get("presented_in_ls") or r.get("laid_in_rs") or "—"
-        category = classify_report(title)
+        badge = category_badge(title)
+        ckey = r.get("committee", "")
 
         if show_committee:
             cols = st.columns([2, 0.5, 4, 1, 1])
@@ -230,14 +329,20 @@ def clickable_report_table(reports_list, table_key, show_committee=True):
             if cols[2].button(title[:120], key=f"{table_key}_{i}", type="tertiary"):
                 show_report_dialog(r)
             cols[3].caption(date)
-            cols[4].caption(category)
+            cols[4].markdown(badge, unsafe_allow_html=True)
         else:
             cols = st.columns([0.5, 5, 1, 1])
             cols[0].caption(str(report_num))
             if cols[1].button(title[:120], key=f"{table_key}_{i}", type="tertiary"):
                 show_report_dialog(r)
             cols[2].caption(date)
-            cols[3].caption(category)
+            cols[3].markdown(badge, unsafe_allow_html=True)
+
+        # Show summary preview if available
+        if show_preview and ckey:
+            preview = get_summary_preview(ckey, report_num)
+            if preview:
+                st.caption(f"_{preview}_")
 
 
 # --- Sidebar: Data controls ---
@@ -269,11 +374,8 @@ with st.sidebar.expander("Fetch / Refresh Data"):
         st.rerun()
 
 
-# --- Sidebar: BYOK LLM API Key ---
-st.sidebar.header("AI Summarization")
-st.sidebar.caption("Bring your own API key to enable AI-powered summaries.")
-
-# Provider presets: (display_name, backend, default_model, base_url, needs_key)
+# --- Sidebar: AI Summarization ---
+# Provider presets: (backend, default_model, base_url, needs_key)
 _PROVIDER_PRESETS = {
     "Anthropic (Claude)": ("anthropic", "claude-sonnet-4-20250514", "", True),
     "OpenAI (GPT)": ("openai", "gpt-4o", "", True),
@@ -284,64 +386,67 @@ _PROVIDER_PRESETS = {
     "Custom (OpenAI-compatible)": ("openai", "", "", True),
 }
 
-byok_preset = st.sidebar.selectbox(
-    "LLM Provider",
-    list(_PROVIDER_PRESETS.keys()),
-    key="byok_preset",
-)
-_backend, _default_model, _default_url, _needs_key = _PROVIDER_PRESETS[byok_preset]
+with st.sidebar.expander("AI Summarization", expanded=False):
+    st.caption("Bring your own API key to enable AI-powered summaries.")
 
-# Show help text for specific providers
-if byok_preset == "Ollama (local, no key)":
-    st.sidebar.info("Requires [Ollama](https://ollama.com) running locally. Run `ollama pull llama3.2` first.")
-elif byok_preset == "Google Gemini (free tier)":
-    st.sidebar.info("Get a free API key at [Google AI Studio](https://aistudio.google.com/apikey). 15 requests/min, 1M tokens/day.")
-elif byok_preset == "Groq (free tier)":
-    st.sidebar.info("Get a free API key at [groq.com/keys](https://console.groq.com/keys). Very fast inference.")
-elif byok_preset == "OpenRouter (free models)":
-    st.sidebar.info("Get a free API key at [openrouter.ai/keys](https://openrouter.ai/keys). Access free open-source models.")
-
-if _needs_key:
-    byok_api_key = st.sidebar.text_input(
-        "API Key",
-        type="password",
-        key="byok_api_key",
-        placeholder="Enter your API key",
+    byok_preset = st.selectbox(
+        "LLM Provider",
+        list(_PROVIDER_PRESETS.keys()),
+        key="byok_preset",
     )
-else:
-    byok_api_key = "ollama"  # Ollama doesn't validate keys but the client needs a non-empty string
+    _backend, _default_model, _default_url, _needs_key = _PROVIDER_PRESETS[byok_preset]
 
-byok_model = st.sidebar.text_input(
-    "Model (optional)",
-    key="byok_model",
-    placeholder=_default_model,
-)
+    # Show help text for specific providers
+    if byok_preset == "Ollama (local, no key)":
+        st.info("Requires [Ollama](https://ollama.com) running locally. Run `ollama pull llama3.2` first.")
+    elif byok_preset == "Google Gemini (free tier)":
+        st.info("Get a free API key at [Google AI Studio](https://aistudio.google.com/apikey). 15 requests/min, 1M tokens/day.")
+    elif byok_preset == "Groq (free tier)":
+        st.info("Get a free API key at [groq.com/keys](https://console.groq.com/keys). Very fast inference.")
+    elif byok_preset == "OpenRouter (free models)":
+        st.info("Get a free API key at [openrouter.ai/keys](https://openrouter.ai/keys). Access free open-source models.")
 
-if byok_preset == "Custom (OpenAI-compatible)":
-    byok_base_url = st.sidebar.text_input(
-        "Base URL",
-        key="byok_base_url",
-        placeholder="https://your-api-endpoint.com/v1",
+    if _needs_key:
+        byok_api_key = st.text_input(
+            "API Key",
+            type="password",
+            key="byok_api_key",
+            placeholder="Enter your API key",
+        )
+    else:
+        byok_api_key = "ollama"
+
+    byok_model = st.text_input(
+        "Model (optional)",
+        key="byok_model",
+        placeholder=_default_model,
     )
-else:
-    byok_base_url = _default_url
 
-# Privacy notice and clear button
-if _needs_key and st.session_state.get("byok_api_key"):
-    if st.sidebar.button("Clear API Key", type="secondary", use_container_width=True):
-        st.session_state["byok_api_key"] = ""
-        st.rerun()
+    if byok_preset == "Custom (OpenAI-compatible)":
+        byok_base_url = st.text_input(
+            "Base URL",
+            key="byok_base_url",
+            placeholder="https://your-api-endpoint.com/v1",
+        )
+    else:
+        byok_base_url = _default_url
 
-st.sidebar.markdown(
-    '<div style="font-size: 0.75em; color: #6C757D; line-height: 1.4; margin-top: 0.5em;">'
-    '🔒 <strong>Privacy:</strong> Your API key stays in your browser session memory only. '
-    'It is sent directly to your chosen LLM provider and nowhere else. '
-    'Nothing is logged, stored on disk, or transmitted to our servers. '
-    'The key is automatically erased when you close this tab. '
-    '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #1B4F72;">'
-    'Verify in source code</a>.</div>',
-    unsafe_allow_html=True,
-)
+    # Privacy notice and clear button
+    if _needs_key and st.session_state.get("byok_api_key"):
+        if st.button("Clear API Key", type="secondary", use_container_width=True):
+            st.session_state["byok_api_key"] = ""
+            st.rerun()
+
+    st.markdown(
+        '<div style="font-size: 0.75em; color: #6C757D; line-height: 1.4; margin-top: 0.5em;">'
+        '🔒 <strong>Privacy:</strong> Your API key stays in your browser session memory only. '
+        'It is sent directly to your chosen LLM provider and nowhere else. '
+        'Nothing is logged, stored on disk, or transmitted to our servers. '
+        'The key is automatically erased when you close this tab. '
+        '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #1B4F72;">'
+        'Verify in source code</a>.</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def _get_byok_kwargs():
@@ -370,7 +475,17 @@ def _has_api_key():
 
 # --- Main content: Tabs ---
 if not has_data():
-    st.info("No data available yet. Use **Fetch All Committees** in the sidebar to download report listings from sansad.in.")
+    st.markdown(
+        '<div class="welcome-box">'
+        '<h2>Welcome to ParliamentWatch</h2>'
+        '<p style="font-size: 1.1em; color: #5D6D7E;">Track, search, and summarize Indian Parliamentary Committee reports</p>'
+        '<p style="color: #85929E;">To get started, click <strong>Fetch All Committees</strong> in the sidebar.<br>'
+        'This will download report listings for all 16 DRSCs from sansad.in.</p>'
+        '<p style="font-size: 0.85em; color: #ABB2B9; margin-top: 1.5em;">'
+        'No API key needed for browsing and searching. Add one in the sidebar for AI summaries.</p>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
     st.stop()
 
 all_reports = load_existing_reports()
@@ -429,20 +544,22 @@ with tab_dashboard:
                 "Committee": info["name"],
                 "Reports": 0,
                 "Latest": "—",
-                "DFG Reports": 0,
+                "Extracted": "0 / 0",
+                "Summarized": "0 / 0",
             })
             continue
 
         dates = [get_report_date(r) for r in reports]
         valid_dates = [d for d in dates if d]
         latest = max(valid_dates).strftime("%d %b %Y") if valid_dates else "—"
-        dfg_count = sum(1 for r in reports if classify_report(r.get("title", "")) == "Demand for Grants")
+        extracted, summarized, total = committee_progress(key, reports)
 
         committee_rows.append({
             "Committee": info["name"],
             "Reports": len(reports),
             "Latest": latest,
-            "DFG Reports": dfg_count,
+            "Extracted": f"{extracted} / {total}",
+            "Summarized": f"{summarized} / {total}",
         })
 
     df_committees = pd.DataFrame(committee_rows)
@@ -451,7 +568,8 @@ with tab_dashboard:
         hide_index=True,
         column_config={
             "Reports": st.column_config.NumberColumn(width="small"),
-            "DFG Reports": st.column_config.NumberColumn(label="Demand for Grants", width="small"),
+            "Extracted": st.column_config.TextColumn(label="Text Extracted", width="small"),
+            "Summarized": st.column_config.TextColumn(width="small"),
         },
     )
 
@@ -489,6 +607,39 @@ with tab_committee:
         ls_reports = [r for r in reports if r.get("house") == "L"]
         rs_reports = [r for r in reports if r.get("house") == "R"]
         st.metric("LS / RS", f"{len(ls_reports)} / {len(rs_reports)}")
+
+    # Progress and batch summarize
+    extracted, summarized, total = committee_progress(selected_key, reports)
+    prog_col1, prog_col2, prog_col3 = st.columns([2, 2, 1])
+    with prog_col1:
+        st.caption(f"Text extracted: {extracted} / {total}")
+        st.progress(extracted / total if total else 0)
+    with prog_col2:
+        st.caption(f"Summarized: {summarized} / {total}")
+        st.progress(summarized / total if total else 0)
+    with prog_col3:
+        if _has_api_key():
+            # Find reports that have text but no summary
+            unsummarized = [r for r in reports
+                           if has_text(selected_key, r.get("report_number", 0))
+                           and not has_summary(selected_key, r.get("report_number", 0))]
+            if unsummarized:
+                if st.button(f"Summarize All ({len(unsummarized)})", key="batch_summarize", type="primary"):
+                    progress_bar = st.progress(0)
+                    for idx, r in enumerate(unsummarized):
+                        rnum = r.get("report_number", "?")
+                        safe_name = str(rnum).replace("/", "-").replace(" ", "_")
+                        text_path = os.path.join(TEXT_DIR, selected_key, f"{safe_name}.txt")
+                        try:
+                            with open(text_path, "r") as f:
+                                text = f.read()
+                            summarize_report(text, selected_name, str(rnum), selected_key, **_get_byok_kwargs())
+                        except Exception:
+                            pass
+                        progress_bar.progress((idx + 1) / len(unsummarized))
+                    st.rerun()
+            elif extracted > 0:
+                st.caption("All extracted reports are summarized")
 
     # Filters
     filter_col1, filter_col2, filter_col3 = st.columns(3)
@@ -656,11 +807,11 @@ with tab_search:
 
             if title_results:
                 st.write(f"**Title matches** ({len(title_results)})")
-                clickable_report_table(title_results, "search_title")
+                clickable_report_table(title_results, "search_title", show_preview=True)
 
             if fulltext_results:
                 st.write(f"**Full-text matches** ({len(fulltext_results)})")
-                clickable_report_table(fulltext_results, "search_ft")
+                clickable_report_table(fulltext_results, "search_ft", show_preview=True)
 
             if search_scope == "Titles + Full text":
                 # Count how many reports have extracted text
