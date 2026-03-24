@@ -141,7 +141,7 @@ def scrape_all_committees(committee_keys=None, lok_sabha=None, house="L", both_h
 
         all_reports[key] = sorted(
             existing_reports.values(),
-            key=lambda x: (x.get("lok_sabha", 0), x.get("report_number", 0)),
+            key=lambda x: (x.get("lok_sabha") or 0, x.get("report_number") or 0),
             reverse=True,
         )
 
@@ -195,7 +195,7 @@ def detect_new_reports(committee_keys=None):
             existing[(r.get("report_number"), r.get("lok_sabha"))] = r
         all_reports[key] = sorted(
             existing.values(),
-            key=lambda x: (x.get("lok_sabha", 0), x.get("report_number", 0)),
+            key=lambda x: (x.get("lok_sabha") or 0, x.get("report_number") or 0),
             reverse=True,
         )
     save_reports(all_reports)
