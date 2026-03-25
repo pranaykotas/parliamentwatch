@@ -223,10 +223,12 @@ def show_report_dialog(r):
             st.write(f"**Laid in RS:** {r['laid_in_rs']}")
         link_parts = []
         if pdf_url:
-            link_parts.append(f"[PDF (English)]({pdf_url})")
+            safe_pdf_url = pdf_url.replace(" ", "%20")
+            link_parts.append(f"[PDF (English)]({safe_pdf_url})")
         pdf_hindi = r.get("pdf_url_hindi", "")
         if pdf_hindi:
-            link_parts.append(f"[PDF (Hindi)]({pdf_hindi})")
+            safe_pdf_hindi = pdf_hindi.replace(" ", "%20")
+            link_parts.append(f"[PDF (Hindi)]({safe_pdf_hindi})")
         if link_parts:
             st.markdown(" | ".join(link_parts))
 
@@ -758,10 +760,12 @@ with tab_committee:
             with col_b:
                 pdf_url = r.get("pdf_url", "")
                 if pdf_url:
-                    st.markdown(f"[PDF (English)]({pdf_url})")
+                    safe_pdf_url = pdf_url.replace(" ", "%20")
+                    st.markdown(f"[PDF (English)]({safe_pdf_url})")
                 pdf_hindi = r.get("pdf_url_hindi", "")
                 if pdf_hindi:
-                    st.markdown(f"[PDF (Hindi)]({pdf_hindi})")
+                    safe_pdf_hindi = pdf_hindi.replace(" ", "%20")
+                    st.markdown(f"[PDF (Hindi)]({safe_pdf_hindi})")
 
             # Summarize button inline
             btn_key = f"summarize_{selected_key}_{report_num}"
