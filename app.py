@@ -933,6 +933,8 @@ with tab_export:
             st.warning("No reports found.")
         else:
             df = pd.DataFrame(flat)
+            if "pdf_url" in df.columns:
+                df["pdf_url"] = df["pdf_url"].apply(lambda x: x.replace(" ", "%20") if isinstance(x, str) and x else "")
             display_cols = [
                 "committee_name", "report_number", "title",
                 "presented_in_ls", "laid_in_rs", "lok_sabha", "house", "pdf_url",

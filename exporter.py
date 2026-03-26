@@ -27,6 +27,9 @@ def export_csv(committee_key=None, output_path=None):
 
     for key in committees:
         for r in reports.get(key, []):
+            pdf_url = r.get("pdf_url", "")
+            safe_pdf_url = pdf_url.replace(" ", "%20") if pdf_url else ""
+
             rows.append({
                 "committee": r.get("committee", key),
                 "committee_name": r.get("committee_name", ""),
@@ -35,7 +38,7 @@ def export_csv(committee_key=None, output_path=None):
                 "presented_in_ls": r.get("presented_in_ls", ""),
                 "laid_in_rs": r.get("laid_in_rs", ""),
                 "lok_sabha": r.get("lok_sabha", ""),
-                "pdf_url": r.get("pdf_url", ""),
+                "pdf_url": safe_pdf_url,
             })
 
     if not rows:
