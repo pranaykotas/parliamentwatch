@@ -1,8 +1,20 @@
 """Detect new reports and format email notifications."""
 
 import os
+from urllib.parse import quote
 from scraper import detect_new_reports
 from config import DATA_DIR
+
+
+def encode_pdf_url(url):
+    """Percent-encode spaces and special characters in a sansad.in PDF URL path."""
+    if not url:
+        return url
+    # Split on '?' to avoid encoding the query string
+    parts = url.split("?", 1)
+    # Encode only the path portion, preserving slashes and colons
+    parts[0] = quote(parts[0], safe="/:.")
+    return "?".join(parts)
 
 
 def check_for_new_reports(committee_keys=None):
@@ -41,7 +53,7 @@ def check_for_new_reports(committee_keys=None):
         if date:
             lines.append(f"Date: {date}")
         if report.get("pdf_url"):
-            lines.append(f"PDF: {report['pdf_url']}")
+            lines.append(f"PDF: {encode_pdf_url(report['pdf_url'])}")
         lines.append("")
         lines.append("-" * 40)
         lines.append("")
