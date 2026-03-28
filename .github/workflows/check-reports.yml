@@ -27,20 +27,25 @@ jobs:
         env:
           LOK_SABHA_NUMBER: '18'
 
-      - name: Read notification subject
-        id: read-subject
-        if: hashFiles('data/notification.txt') != ''
-        run: echo "subject=$(head -1 data/notification.txt)" >> $GITHUB_OUTPUT
+      - name: Read notification if new reports found
+        id: notification
+        run: |
+          if [ -f data/notification.txt ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "subject=$(head -1 data/notification.txt)" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Send email if new reports found
-        if: hashFiles('data/notification.txt') != ''
+        if: steps.notification.outputs.found == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER }}
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: ${{ steps.read-subject.outputs.subject }}
+          subject: ${{ steps.notification.outputs.subject }}
           to: ${{ secrets.NOTIFICATION_EMAIL }}
           from: ${{ secrets.SMTP_USERNAME }}
           body: file://data/notification.txt
