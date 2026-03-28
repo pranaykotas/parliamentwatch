@@ -27,6 +27,11 @@ jobs:
         env:
           LOK_SABHA_NUMBER: '18'
 
+      - name: Read notification subject
+        id: read-subject
+        if: hashFiles('data/notification.txt') != ''
+        run: echo "subject=$(head -1 data/notification.txt)" >> $GITHUB_OUTPUT
+
       - name: Send email if new reports found
         if: hashFiles('data/notification.txt') != ''
         uses: dawidd6/action-send-mail@v3
