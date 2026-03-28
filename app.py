@@ -14,6 +14,7 @@ from scraper import (
 )
 from pdf_utils import get_report_text
 from summarizer import summarize_report
+from committee_members import load_committee_members, fetch_all_committee_members
 
 # --- Page config ---
 st.set_page_config(
@@ -376,6 +377,19 @@ with st.sidebar.expander("Fetch / Refresh Data"):
             status.update(label=f"Done — {total} reports fetched", state="complete")
         st.rerun()
 
+    if st.button("Fetch Committee Members", type="secondary"):
+        with st.status("Fetching committee membership data...", expanded=True) as status:
+            result = fetch_all_committee_members(lok_sabha=fetch_ls)
+            total_members = sum(
+                c["member_count"] for c in result.get("committees", {}).values()
+            )
+            unmatched = result.get("metadata", {}).get("unmatched_members", 0)
+            label = f"Done — {total_members} members across {len(result.get('committees', {}))} committees"
+            if unmatched:
+                label += f" ({unmatched} unmatched)"
+            status.update(label=label, state="complete")
+        st.rerun()
+
     st.divider()
     st.caption("Download reports from multiple Lok Sabhas at once. Data is merged — nothing gets overwritten.")
     historical_range = st.slider("Lok Sabha range", min_value=14, max_value=18, value=(14, 18), key="hist_range")
@@ -653,152 +667,224 @@ with tab_committee:
     if dive_ls_filter != "All":
         reports = [r for r in reports if r.get("lok_sabha") == dive_ls_filter]
 
-    # Committee stats
-    col1, col2, col3, col4 = st.columns(4)
-    dates = [get_report_date(r) for r in reports]
-    valid_dates = [d for d in dates if d]
-    with col1:
-        st.metric("Total Reports", len(reports))
-    with col2:
-        st.metric("Latest", max(valid_dates).strftime("%d %b %Y") if valid_dates else "—")
-    with col3:
-        st.metric("Earliest", min(valid_dates).strftime("%d %b %Y") if valid_dates else "—")
-    with col4:
-        ls_reports = [r for r in reports if r.get("house") == "L"]
-        rs_reports = [r for r in reports if r.get("house") == "R"]
-        st.metric("LS / RS", f"{len(ls_reports)} / {len(rs_reports)}")
+    # Sub-tabs: Reports (default) and Members
+    dive_tab_reports, dive_tab_members = st.tabs(["Reports", "Members"])
 
-    # Progress and batch summarize
-    extracted, summarized, total = committee_progress(selected_key, reports)
-    prog_col1, prog_col2, prog_col3 = st.columns([2, 2, 1])
-    with prog_col1:
-        st.caption(f"Text extracted: {extracted} / {total}")
-        st.progress(extracted / total if total else 0)
-    with prog_col2:
-        st.caption(f"Summarized: {summarized} / {total}")
-        st.progress(summarized / total if total else 0)
-    with prog_col3:
-        if _has_api_key():
-            # Find reports that have text but no summary
-            unsummarized = [r for r in reports
-                           if has_text(selected_key, r.get("report_number", 0))
-                           and not has_summary(selected_key, r.get("report_number", 0))]
-            if unsummarized:
-                if st.button(f"Summarize All ({len(unsummarized)})", key="batch_summarize", type="primary"):
-                    progress_bar = st.progress(0)
-                    for idx, r in enumerate(unsummarized):
-                        rnum = r.get("report_number", "?")
-                        safe_name = str(rnum).replace("/", "-").replace(" ", "_")
-                        text_path = os.path.join(TEXT_DIR, selected_key, f"{safe_name}.txt")
-                        try:
-                            with open(text_path, "r") as f:
-                                text = f.read()
-                            summarize_report(text, selected_name, str(rnum), selected_key, **_get_byok_kwargs())
-                        except Exception:
-                            pass
-                        progress_bar.progress((idx + 1) / len(unsummarized))
-                    st.rerun()
-            elif extracted > 0:
-                st.caption("All extracted reports are summarized")
+    # ---- Reports sub-tab ----
+    with dive_tab_reports:
+        # Committee stats
+        col1, col2, col3, col4 = st.columns(4)
+        dates = [get_report_date(r) for r in reports]
+        valid_dates = [d for d in dates if d]
+        with col1:
+            st.metric("Total Reports", len(reports))
+        with col2:
+            st.metric("Latest", max(valid_dates).strftime("%d %b %Y") if valid_dates else "—")
+        with col3:
+            st.metric("Earliest", min(valid_dates).strftime("%d %b %Y") if valid_dates else "—")
+        with col4:
+            ls_reports = [r for r in reports if r.get("house") == "L"]
+            rs_reports = [r for r in reports if r.get("house") == "R"]
+            st.metric("LS / RS", f"{len(ls_reports)} / {len(rs_reports)}")
 
-    # Filters
-    filter_col1, filter_col2, filter_col3 = st.columns(3)
-    with filter_col1:
-        categories = sorted(set(classify_report(r.get("title", "")) for r in reports))
-        selected_category = st.selectbox("Filter by type", ["All"] + categories, key="dive_category")
-    with filter_col2:
-        keyword_filter = st.text_input("Filter by keyword", key="dive_keyword", placeholder="e.g. procurement, DRDO")
-    with filter_col3:
-        sort_order = st.selectbox("Sort by", ["Date (newest first)", "Date (oldest first)", "Report # (desc)", "Report # (asc)"], key="dive_sort")
-
-    # Apply filters
-    filtered = reports
-    if selected_category != "All":
-        filtered = [r for r in filtered if classify_report(r.get("title", "")) == selected_category]
-    if keyword_filter:
-        kw = keyword_filter.lower()
-        filtered = [r for r in filtered if kw in r.get("title", "").lower()]
-
-    # Apply sorting
-    if sort_order == "Date (newest first)":
-        filtered = sorted(filtered, key=lambda r: get_report_date(r) or datetime.min, reverse=True)
-    elif sort_order == "Date (oldest first)":
-        filtered = sorted(filtered, key=lambda r: get_report_date(r) or datetime.min)
-    elif sort_order == "Report # (asc)":
-        filtered = sorted(filtered, key=lambda r: r.get("report_number", 0))
-    # "Report # (desc)" is the default storage order, no re-sort needed
-
-    st.caption(f"Showing {len(filtered)} of {len(reports)} reports")
-
-    # Display reports with expandable details
-    for r in filtered:
-        date = r.get("presented_in_ls") or r.get("laid_in_rs") or "—"
-        category = classify_report(r.get("title", ""))
-        house_label = "LS" if r.get("house") == "L" else ("RS" if r.get("house") == "R" else "")
-        report_num = r.get("report_number", "?")
-
-        # Status indicators
-        status_parts = []
-        if has_summary(selected_key, report_num):
-            status_parts.append("summarized")
-        elif has_text(selected_key, report_num):
-            status_parts.append("text extracted")
-        status_str = f" [{', '.join(status_parts)}]" if status_parts else ""
-
-        header = f"**#{report_num}** | {category} | {house_label} | {date}{status_str}"
-
-        with st.expander(header):
-            st.write(r.get("title", "No title"))
-
-            col_a, col_b = st.columns(2)
-            with col_a:
-                if r.get("presented_in_ls"):
-                    st.write(f"**Presented in LS:** {r['presented_in_ls']}")
-                if r.get("laid_in_rs"):
-                    st.write(f"**Laid in RS:** {r['laid_in_rs']}")
-                st.write(f"**Lok Sabha:** {r.get('lok_sabha', '—')}")
-            with col_b:
-                pdf_url = r.get("pdf_url", "")
-                if pdf_url:
-                    safe_pdf_url = pdf_url.replace(" ", "%20")
-                    st.markdown(f"[PDF (English)]({safe_pdf_url})")
-                pdf_hindi = r.get("pdf_url_hindi", "")
-                if pdf_hindi:
-                    safe_pdf_hindi = pdf_hindi.replace(" ", "%20")
-                    st.markdown(f"[PDF (Hindi)]({safe_pdf_hindi})")
-
-            # Summarize button inline
-            btn_key = f"summarize_{selected_key}_{report_num}"
+        # Progress and batch summarize
+        extracted, summarized, total = committee_progress(selected_key, reports)
+        prog_col1, prog_col2, prog_col3 = st.columns([2, 2, 1])
+        with prog_col1:
+            st.caption(f"Text extracted: {extracted} / {total}")
+            st.progress(extracted / total if total else 0)
+        with prog_col2:
+            st.caption(f"Summarized: {summarized} / {total}")
+            st.progress(summarized / total if total else 0)
+        with prog_col3:
             if _has_api_key():
-                if st.button("Extract & Summarize", key=btn_key, type="secondary"):
-                    if not pdf_url:
-                        st.error("No PDF URL available.")
-                    else:
-                        with st.status("Processing...", expanded=True) as status:
-                            st.write("Downloading PDF...")
-                            text = get_report_text(pdf_url, selected_key, str(report_num))
-                            if not text:
-                                status.update(label="Failed to extract text", state="error")
-                            else:
-                                st.write(f"Extracted {len(text):,} characters")
-                                st.write("Generating summary...")
-                                summary = summarize_report(text, selected_name, str(report_num), selected_key, **_get_byok_kwargs())
-                                if summary and summary.startswith("__ERROR__:"):
-                                    status.update(label="Error from LLM", state="error")
-                                    st.error(summary.replace("__ERROR__:", ""))
-                                elif summary:
-                                    status.update(label="Summary generated!", state="complete")
-                                else:
-                                    status.update(label="LLM returned no response — check your API key and provider", state="error")
-            else:
-                st.caption("Enter your LLM API key in the sidebar to enable summarization.")
+                # Find reports that have text but no summary
+                unsummarized = [r for r in reports
+                               if has_text(selected_key, r.get("report_number", 0))
+                               and not has_summary(selected_key, r.get("report_number", 0))]
+                if unsummarized:
+                    if st.button(f"Summarize All ({len(unsummarized)})", key="batch_summarize", type="primary"):
+                        progress_bar = st.progress(0)
+                        for idx, r in enumerate(unsummarized):
+                            rnum = r.get("report_number", "?")
+                            safe_name = str(rnum).replace("/", "-").replace(" ", "_")
+                            text_path = os.path.join(TEXT_DIR, selected_key, f"{safe_name}.txt")
+                            try:
+                                with open(text_path, "r") as f:
+                                    text = f.read()
+                                summarize_report(text, selected_name, str(rnum), selected_key, **_get_byok_kwargs())
+                            except Exception:
+                                pass
+                            progress_bar.progress((idx + 1) / len(unsummarized))
+                        st.rerun()
+                elif extracted > 0:
+                    st.caption("All extracted reports are summarized")
 
-            # Show cached summary if available
+        # Filters
+        filter_col1, filter_col2, filter_col3 = st.columns(3)
+        with filter_col1:
+            categories = sorted(set(classify_report(r.get("title", "")) for r in reports))
+            selected_category = st.selectbox("Filter by type", ["All"] + categories, key="dive_category")
+        with filter_col2:
+            keyword_filter = st.text_input("Filter by keyword", key="dive_keyword", placeholder="e.g. procurement, DRDO")
+        with filter_col3:
+            sort_order = st.selectbox("Sort by", ["Date (newest first)", "Date (oldest first)", "Report # (desc)", "Report # (asc)"], key="dive_sort")
+
+        # Apply filters
+        filtered = reports
+        if selected_category != "All":
+            filtered = [r for r in filtered if classify_report(r.get("title", "")) == selected_category]
+        if keyword_filter:
+            kw = keyword_filter.lower()
+            filtered = [r for r in filtered if kw in r.get("title", "").lower()]
+
+        # Apply sorting
+        if sort_order == "Date (newest first)":
+            filtered = sorted(filtered, key=lambda r: get_report_date(r) or datetime.min, reverse=True)
+        elif sort_order == "Date (oldest first)":
+            filtered = sorted(filtered, key=lambda r: get_report_date(r) or datetime.min)
+        elif sort_order == "Report # (asc)":
+            filtered = sorted(filtered, key=lambda r: r.get("report_number", 0))
+        # "Report # (desc)" is the default storage order, no re-sort needed
+
+        st.caption(f"Showing {len(filtered)} of {len(reports)} reports")
+
+        # Display reports with expandable details
+        for r in filtered:
+            date = r.get("presented_in_ls") or r.get("laid_in_rs") or "—"
+            category = classify_report(r.get("title", ""))
+            house_label = "LS" if r.get("house") == "L" else ("RS" if r.get("house") == "R" else "")
+            report_num = r.get("report_number", "?")
+
+            # Status indicators
+            status_parts = []
             if has_summary(selected_key, report_num):
-                safe_name = str(report_num).replace("/", "-").replace(" ", "_")
-                summary_path = os.path.join(SUMMARIES_DIR, selected_key, f"{safe_name}.md")
-                with open(summary_path, "r") as f:
-                    st.markdown(f.read())
+                status_parts.append("summarized")
+            elif has_text(selected_key, report_num):
+                status_parts.append("text extracted")
+            status_str = f" [{', '.join(status_parts)}]" if status_parts else ""
+
+            header = f"**#{report_num}** | {category} | {house_label} | {date}{status_str}"
+
+            with st.expander(header):
+                st.write(r.get("title", "No title"))
+
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    if r.get("presented_in_ls"):
+                        st.write(f"**Presented in LS:** {r['presented_in_ls']}")
+                    if r.get("laid_in_rs"):
+                        st.write(f"**Laid in RS:** {r['laid_in_rs']}")
+                    st.write(f"**Lok Sabha:** {r.get('lok_sabha', '—')}")
+                with col_b:
+                    pdf_url = r.get("pdf_url", "")
+                    if pdf_url:
+                        safe_pdf_url = pdf_url.replace(" ", "%20")
+                        st.markdown(f"[PDF (English)]({safe_pdf_url})")
+                    pdf_hindi = r.get("pdf_url_hindi", "")
+                    if pdf_hindi:
+                        safe_pdf_hindi = pdf_hindi.replace(" ", "%20")
+                        st.markdown(f"[PDF (Hindi)]({safe_pdf_hindi})")
+
+                # Summarize button inline
+                btn_key = f"summarize_{selected_key}_{report_num}"
+                if _has_api_key():
+                    if st.button("Extract & Summarize", key=btn_key, type="secondary"):
+                        if not pdf_url:
+                            st.error("No PDF URL available.")
+                        else:
+                            with st.status("Processing...", expanded=True) as status:
+                                st.write("Downloading PDF...")
+                                text = get_report_text(pdf_url, selected_key, str(report_num))
+                                if not text:
+                                    status.update(label="Failed to extract text", state="error")
+                                else:
+                                    st.write(f"Extracted {len(text):,} characters")
+                                    st.write("Generating summary...")
+                                    summary = summarize_report(text, selected_name, str(report_num), selected_key, **_get_byok_kwargs())
+                                    if summary and summary.startswith("__ERROR__:"):
+                                        status.update(label="Error from LLM", state="error")
+                                        st.error(summary.replace("__ERROR__:", ""))
+                                    elif summary:
+                                        status.update(label="Summary generated!", state="complete")
+                                    else:
+                                        status.update(label="LLM returned no response — check your API key and provider", state="error")
+                else:
+                    st.caption("Enter your LLM API key in the sidebar to enable summarization.")
+
+                # Show cached summary if available
+                if has_summary(selected_key, report_num):
+                    safe_name = str(report_num).replace("/", "-").replace(" ", "_")
+                    summary_path = os.path.join(SUMMARIES_DIR, selected_key, f"{safe_name}.md")
+                    with open(summary_path, "r") as f:
+                        st.markdown(f.read())
+
+    # ---- Members sub-tab ----
+    with dive_tab_members:
+        members_data = load_committee_members()
+        committee_members = members_data.get("committees", {}).get(selected_key, {})
+        members_list = committee_members.get("members", [])
+
+        if not members_list:
+            st.info(
+                "No committee membership data available. "
+                "Use the **Fetch Members** button in the sidebar or run "
+                "`python cli.py --fetch-members` to load it."
+            )
+        else:
+            # Summary metrics
+            ls_count = sum(1 for m in members_list if "lok" in m.get("house", "").lower())
+            rs_count = sum(1 for m in members_list if "rajya" in m.get("house", "").lower())
+            matched = sum(1 for m in members_list if m.get("mpsno"))
+            chairperson = next((m for m in members_list if "chair" in m.get("role", "").lower()), None)
+
+            mc1, mc2, mc3, mc4 = st.columns(4)
+            with mc1:
+                st.metric("Total Members", len(members_list))
+            with mc2:
+                st.metric("Lok Sabha", ls_count)
+            with mc3:
+                st.metric("Rajya Sabha", rs_count)
+            with mc4:
+                chair_name = chairperson.get("display_name") or chairperson.get("name", "") if chairperson else "—"
+                st.caption("Chairperson")
+                st.markdown(f"**{chair_name}**")
+
+            # Build dataframe for display
+            rows = []
+            for m in members_list:
+                profile_url = m.get("profile_url", "")
+                rows.append(
+                    {
+                        "Name": m.get("display_name") or m.get("name", ""),
+                        "Role": m.get("role", ""),
+                        "House": "Lok Sabha" if "lok" in m.get("house", "").lower() else "Rajya Sabha",
+                        "Party": m.get("party", "") or m.get("party_short", ""),
+                        "State": m.get("state", ""),
+                        "Constituency": m.get("constituency", ""),
+                        "Profile": profile_url,
+                    }
+                )
+
+            df = pd.DataFrame(rows)
+
+            st.dataframe(
+                df,
+                column_config={
+                    "Profile": st.column_config.LinkColumn(
+                        "Profile",
+                        display_text="View",
+                    ),
+                },
+                hide_index=True,
+                use_container_width=True,
+            )
+
+            # Show metadata
+            metadata = members_data.get("metadata", {})
+            fetched_at = metadata.get("fetched_at", "")
+            if fetched_at:
+                st.caption(f"Member data last fetched: {fetched_at[:10]}")
 
 
 # ============================================================
