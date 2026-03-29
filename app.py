@@ -1,6 +1,7 @@
 """ParliamentWatch — Streamlit GUI for exploring Indian Parliamentary Committee reports."""
 
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import os
 from datetime import datetime, timedelta
@@ -328,7 +329,11 @@ def clickable_report_table(reports_list, table_key, show_committee=True, show_pr
 
         if show_committee:
             cols = st.columns([2, 0.5, 4, 1, 1])
-            cols[0].caption(r.get("committee_name", ""))
+            committee_name = r.get("committee_name", "")
+            if cols[0].button(committee_name, key=f"{table_key}_comm_{i}", type="tertiary"):
+                st.session_state["dive_committee"] = committee_name
+                st.session_state["_nav_tab_index"] = _TAB_NAMES.index("Committee Deep Dive")
+                st.rerun()
             cols[1].caption(str(report_num))
             if cols[2].button(title[:120], key=f"{table_key}_{i}", type="tertiary"):
                 show_report_dialog(r)
@@ -374,20 +379,9 @@ with st.sidebar.expander("Fetch / Refresh Data"):
             else:
                 results = scrape_all_committees(lok_sabha=fetch_ls, house=house_code)
             total = sum(len(v) for v in results.values())
-            status.update(label=f"Done — {total} reports fetched", state="complete")
-        st.rerun()
-
-    if st.button("Fetch Committee Members", type="secondary"):
-        with st.status("Fetching committee membership data...", expanded=True) as status:
-            result = fetch_all_committee_members(lok_sabha=fetch_ls)
-            total_members = sum(
-                c["member_count"] for c in result.get("committees", {}).values()
-            )
-            unmatched = result.get("metadata", {}).get("unmatched_members", 0)
-            label = f"Done — {total_members} members across {len(result.get('committees', {}))} committees"
-            if unmatched:
-                label += f" ({unmatched} unmatched)"
-            status.update(label=label, state="complete")
+            st.write(f"Fetched {total} reports. Now fetching committee members...")
+            fetch_all_committee_members(lok_sabha=fetch_ls)
+            status.update(label=f"Done — {total} reports + member data fetched", state="complete")
         st.rerun()
 
     st.divider()
@@ -545,9 +539,21 @@ def filter_by_lok_sabha(reports_dict, ls_number):
     return filtered
 
 
-tab_dashboard, tab_committee, tab_search, tab_export, tab_why = st.tabs([
-    "Dashboard", "Committee Deep Dive", "Search", "Export", "The Why?"
-])
+_TAB_NAMES = ["Dashboard", "Committee Deep Dive", "Search", "Export", "The Why?"]
+tab_dashboard, tab_committee, tab_search, tab_export, tab_why = st.tabs(_TAB_NAMES)
+
+# Programmatic tab navigation via JS (st.tabs has no native API for this)
+if "_nav_tab_index" in st.session_state:
+    _idx = st.session_state.pop("_nav_tab_index")
+    _nav_seq = st.session_state.get("_nav_seq", 0) + 1
+    st.session_state["_nav_seq"] = _nav_seq
+    components.html(f"""
+    <script>
+        // nav-{_nav_seq}
+        const tabs = window.parent.document.querySelectorAll('[data-baseweb="tab"]');
+        if (tabs[{_idx}]) {{ tabs[{_idx}].click(); }}
+    </script>
+    """, height=0)
 
 
 # ============================================================
