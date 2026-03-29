@@ -452,10 +452,11 @@ with st.sidebar.expander("AI Summarization", expanded=False):
         byok_base_url = _default_url
 
     # Privacy notice and clear button
+    def _clear_api_key():
+        st.session_state["byok_api_key"] = ""
+
     if _needs_key and st.session_state.get("byok_api_key"):
-        if st.button("Clear API Key", type="secondary", use_container_width=True):
-            st.session_state["byok_api_key"] = ""
-            st.rerun()
+        st.button("Clear API Key", type="secondary", use_container_width=True, on_click=_clear_api_key)
 
     st.markdown(
         '<div style="font-size: 0.75em; color: #6C757D; line-height: 1.4; margin-top: 0.5em;">'
