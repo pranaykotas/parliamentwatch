@@ -9,6 +9,7 @@ from pdf_utils import get_report_text
 from summarizer import summarize_report
 from notifier import check_for_new_reports, save_notification
 from exporter import export_csv, export_markdown
+from committee_members import fetch_all_committee_members
 
 
 def list_committees():
@@ -268,6 +269,11 @@ def main():
         help="Export report data to CSV or Markdown",
     )
     parser.add_argument(
+        "--fetch-members",
+        action="store_true",
+        help="Fetch committee membership data and resolve MP profiles",
+    )
+    parser.add_argument(
         "--test-email",
         action="store_true",
         help="Send a test email to verify SMTP configuration",
@@ -275,7 +281,11 @@ def main():
 
     args = parser.parse_args()
 
-    if args.test_email:
+    if args.fetch_members:
+        print("Fetching committee membership data...")
+        fetch_all_committee_members(lok_sabha=args.lok_sabha)
+        return
+    elif args.test_email:
         send_test_email()
         return
     elif args.list_committees:
