@@ -370,7 +370,7 @@
       "committee": "agriculture",
       "committee_name": "Agriculture, Animal Husbandry and Food Processing",
       "report_number": 33,
-      "title": "Thirty-Third Report on the subject “Production and Availability of Oilseeds and Pulses in the Country” pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agriculture and Farmers Welfare)",
+      "title": "Thirty-Third Report on the subject “Production and Availability of Oilseeds and Pulses in the Country” pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agriculture and Farmers Welfare).",
       "presented_in_ls": "27-Mar-2026",
       "laid_in_rs": "27-Mar-2026",
       "presented_to_speaker": "27-Mar-2026",
@@ -2356,6 +2356,19 @@
     }
   ],
   "communications": [
+    {
+      "committee": "communications",
+      "committee_name": "Communications and Information Technology",
+      "report_number": 27,
+      "title": "Twenty-seventh Report on the Subject ‘Impact of emergence of Artificial Intelligence and related issues’ relating to the Ministry of Electronics and Information Technology.",
+      "presented_in_ls": "30-Mar-2026",
+      "laid_in_rs": "30-Mar-2026",
+      "presented_to_speaker": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Communications and Information Technology/18_Communications_and_Information_Technology_27.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Communications and Information Technology/18_Communications_and_Information_Technology_27(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
     {
       "committee": "communications",
       "committee_name": "Communications and Information Technology",
