@@ -22,10 +22,13 @@ config.py        → Committee mappings, API codes, paths (loaded from .env)
 
 ## Key Technical Details
 
-- **sansad.in API**: `GET /api_ls/committee/lsRSAllReports` with params `house` (L/R), `committeeCode`, `lsNo`, `page`, `size`, `sortOn`, `sortBy`. Returns JSON with `records` array and `_metadata`.
-- **Committee codes** in `config.py` (`DRSC_COMMITTEES[key]["api_code"]`) map to the API's `committeeCode` param — these are NOT sequential and don't match the URL path numbers.
-- **PDF URLs** follow the pattern: `https://sansad.in/getFile/app/lsscommittee/{Committee}/{lsNo}_{Committee}_{ReportNo}.pdf?source=app`
-- **House support**: `house=L` for Lok Sabha, `house=R` for Rajya Sabha — same API, same committee codes.
+- **Two APIs, one per house** — sansad.in serves LS and RS committee reports from different endpoints. `scraper.py` dispatches based on each committee's configured `house` field:
+  - **LS-chaired (16 committees):** `GET /api_ls/committee/lsRSAllReports` with `house=L`, `committeeCode`, `lsNo`, `page`, `size`, `sortOn`, `sortBy`. Schema uses PascalCase fields (`SubjectOfTheReport`, `LaidInRS`, etc.).
+  - **RS-chaired (8 committees):** `GET /api_rs/committee/committee-reports` with `mstCommId`, `departmentId`, `presentationYear`, `search`, `page`, `size`, `sortOn`, `sortBy`, `locale`. Schema uses camelCase fields (`subjectOfTheReport`, `urlHindi`, `dateOfPresentation` in `DD/MM/YYYY`). The api_ls endpoint returns stale pre-2016 data for RS committees, so always use api_rs for them.
+- **`mstCommId`** for RS committees is the integer in `/rs/committees/{id}` URLs. Stored in `DRSC_COMMITTEES[key]["mst_comm_id"]`.
+- **`api_code`** for LS committees maps to the api_ls `committeeCode` param. Some `api_code` values clash between LS and RS committees (e.g. 18 = Communications LS / Personnel RS) — never fetch a committee with the wrong house.
+- **Parallel fetching**: `scrape_all_committees` and `detect_new_reports` both fan out via `ThreadPoolExecutor` (10 workers). Full 24-committee scrape: ~3–5 seconds.
+- **PDF URLs** follow the pattern: `https://sansad.in/getFile/app/lsscommittee/{Committee}/{lsNo}_{Committee}_{ReportNo}.pdf?source=app` for LS; for RS they live under `getFile/rsnew/Committee_site/...`.
 - All data is cached: PDFs in `data/pdfs/`, extracted text in `data/text/`, summaries in `data/summaries/`.
 - Config values load from `.env` via python-dotenv. Paths default to `{script_dir}/data/`.
 

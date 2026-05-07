@@ -3,7 +3,12 @@
 import json
 import os
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from config import REPORTS_API, RS_REPORTS_API, CURRENT_LOK_SABHA, DRSC_COMMITTEES, REPORTS_JSON, DATA_DIR
+
+# Concurrent workers for parallel committee fetches. sansad.in handles ~10
+# concurrent requests fine; higher gives diminishing returns.
+_MAX_WORKERS = 10
 
 
 def ensure_data_dir():
@@ -184,38 +189,43 @@ def scrape_all_committees(committee_keys=None, lok_sabha=None, house=None, both_
 
     all_reports = load_existing_reports()
 
+    # Filter to committees that exist and match the optional house filter
+    keys_to_scrape = []
     for key in committee_keys:
         if key not in DRSC_COMMITTEES:
             print(f"  Unknown committee: {key}")
             continue
-
-        committee = DRSC_COMMITTEES[key]
-        committee_house = committee.get("house", "L")
-
-        # If user specified a house filter, skip committees that don't match
+        committee_house = DRSC_COMMITTEES[key].get("house", "L")
         if house is not None and house != committee_house:
             continue
+        keys_to_scrape.append(key)
 
-        houses = [committee_house]
+    # Fetch all committees in parallel — most time is spent in HTTP I/O.
+    fetched = {}
+    with ThreadPoolExecutor(max_workers=_MAX_WORKERS) as ex:
+        future_to_key = {
+            ex.submit(fetch_committee_reports, k, lok_sabha): k
+            for k in keys_to_scrape
+        }
+        for fut in as_completed(future_to_key):
+            k = future_to_key[fut]
+            try:
+                fetched[k] = fut.result()
+            except Exception as e:
+                print(f"  Error fetching {k}: {e}")
+                fetched[k] = []
 
-        # Build index of existing reports by (report_number, lok_sabha) for merging.
-        # Filter out cross-contamination from the old `both_houses` bug: records
-        # whose `house` doesn't match the committee's configured house.
+    # Merge fresh data with existing, filtering cross-contamination
+    for key, fresh_reports in fetched.items():
+        committee_house = DRSC_COMMITTEES[key].get("house", "L")
         existing_reports = {
             (r.get("report_number"), r.get("lok_sabha")): r
             for r in all_reports.get(key, [])
             if r.get("house") == committee_house
         }
-
-        for h in houses:
-            reports = fetch_committee_reports(key, lok_sabha, h)
-            for r in reports:
-                # Fresh data from API is authoritative — always overwrite.
-                # This ensures new fields added to the schema (e.g.
-                # date_of_presentation) populate on existing records.
-                rid = (r.get("report_number"), r.get("lok_sabha"))
-                existing_reports[rid] = r
-
+        for r in fresh_reports:
+            rid = (r.get("report_number"), r.get("lok_sabha"))
+            existing_reports[rid] = r
         all_reports[key] = sorted(
             existing_reports.values(),
             key=lambda x: (x.get("lok_sabha") or 0, x.get("report_number") or 0),
@@ -241,25 +251,29 @@ def detect_new_reports(committee_keys=None):
     new_reports = []
     updated = {}
 
-    for key in committee_keys:
-        if key not in DRSC_COMMITTEES:
-            continue
+    keys_to_check = [k for k in committee_keys if k in DRSC_COMMITTEES]
 
-        fresh = fetch_committee_reports(key)
+    # Parallel fetch
+    with ThreadPoolExecutor(max_workers=_MAX_WORKERS) as ex:
+        futures = {ex.submit(fetch_committee_reports, k): k for k in keys_to_check}
+        for fut in as_completed(futures):
+            k = futures[fut]
+            try:
+                updated[k] = fut.result()
+            except Exception as e:
+                print(f"  Error fetching {k}: {e}")
+                updated[k] = []
+
+    for key, fresh in updated.items():
         old_list = old_reports.get(key, [])
-
-        # Build set of known report identifiers
         old_ids = {
             (r.get("report_number"), r.get("lok_sabha", CURRENT_LOK_SABHA))
             for r in old_list
         }
-
         for report in fresh:
             report_id = (report.get("report_number"), report.get("lok_sabha"))
             if report_id not in old_ids:
                 new_reports.append(report)
-
-        updated[key] = fresh
 
     # Merge new data without overwriting other Lok Sabhas
     all_reports = load_existing_reports()

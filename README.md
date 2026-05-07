@@ -89,7 +89,7 @@ This opens a browser window at `http://localhost:8501`. That's it — you're run
 
 ### Step 4: Fetch data
 
-Click **"Fetch All Committees"** in the sidebar. This pulls the latest report listings from sansad.in. It takes about 2 minutes for all 24 committees.
+Click **"Fetch All Committees"** in the sidebar. This pulls the latest report listings from sansad.in. With parallel fetching, all 24 committees come back in 3–5 seconds.
 
 Want historical data too? Use **"Fetch All Historical Data"** to download reports from Lok Sabhas 14–18 (2004 to present) in one go. Data is merged — nothing gets overwritten.
 
@@ -293,7 +293,7 @@ sansad.in API  →  scraper.py  →  data/reports.json  (metadata)
                                   summarizer.py →  data/summaries/ (AI summaries)
 ```
 
-- **scraper.py** calls the sansad.in REST API to fetch structured report metadata — no browser automation or web scraping needed. Data from different Lok Sabhas is merged, not overwritten.
+- **scraper.py** calls the sansad.in REST APIs to fetch structured report metadata. Lok Sabha–chaired committees use `api_ls/committee/lsRSAllReports`; Rajya Sabha–chaired committees use `api_rs/committee/committee-reports` (the LS endpoint returns stale, pre-2016 data for RS committees). All 24 committees are fetched in parallel for speed. Data from different Lok Sabhas is merged, not overwritten.
 - **pdf_utils.py** downloads PDFs and extracts text using pypdf
 - **summarizer.py** sends extracted text to your chosen LLM (BYOK) and caches the summary
 - **app.py** ties it all together in a Streamlit web interface
