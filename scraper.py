@@ -33,7 +33,7 @@ def sanitize_url(url):
     return url
 
 
-def fetch_committee_reports(committee_key, lok_sabha=None, house="L"):
+def fetch_committee_reports(committee_key, lok_sabha=None, house=None):
     """
     Fetch report listings for a single committee from the sansad.in API.
 
@@ -49,6 +49,8 @@ def fetch_committee_reports(committee_key, lok_sabha=None, house="L"):
         lok_sabha = CURRENT_LOK_SABHA
 
     committee = DRSC_COMMITTEES[committee_key]
+    if house is None:
+        house = committee.get("house", "L")
     house_label = "LS" if house == "L" else "RS"
     print(f"  Fetching reports for {committee['name']} ({house_label} {lok_sabha})...")
 
@@ -94,14 +96,14 @@ def fetch_committee_reports(committee_key, lok_sabha=None, house="L"):
     return reports
 
 
-def scrape_all_committees(committee_keys=None, lok_sabha=None, house="L", both_houses=False):
+def scrape_all_committees(committee_keys=None, lok_sabha=None, house=None, both_houses=False):
     """
     Fetch reports for specified committees (or all DRSCs).
 
     Args:
         committee_keys: List of committee short names, or None for all
         lok_sabha: Lok Sabha number (defaults to current)
-        house: "L" for Lok Sabha, "R" for Rajya Sabha
+        house: Override house ("L"/"R"). If None, uses each committee's configured house.
         both_houses: If True, fetch from both LS and RS and merge (dedup by report_number)
 
     Returns:
@@ -112,12 +114,20 @@ def scrape_all_committees(committee_keys=None, lok_sabha=None, house="L", both_h
 
     all_reports = load_existing_reports()
 
-    houses = ["L", "R"] if both_houses else [house]
-
     for key in committee_keys:
         if key not in DRSC_COMMITTEES:
             print(f"  Unknown committee: {key}")
             continue
+
+        committee = DRSC_COMMITTEES[key]
+        committee_house = committee.get("house", "L")
+
+        if both_houses:
+            houses = ["L", "R"]
+        elif house is not None:
+            houses = [house]
+        else:
+            houses = [committee_house]
 
         # Build index of existing reports by (report_number, lok_sabha) for merging
         existing_reports = {

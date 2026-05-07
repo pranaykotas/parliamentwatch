@@ -2,7 +2,7 @@
 
 **Track, search, and summarize Indian Parliamentary Committee reports — all in one place.**
 
-ParliamentWatch pulls reports from [sansad.in](https://sansad.in) (the official Indian Parliament website), lets you browse and search them, and uses AI to generate plain-English summaries. It covers all 16 Departmentally Related Standing Committees (DRSCs) across both Lok Sabha and Rajya Sabha.
+ParliamentWatch pulls reports from [sansad.in](https://sansad.in) (the official Indian Parliament website), lets you browse and search them, and uses AI to generate plain-English summaries. It covers all 24 Departmentally Related Standing Committees (DRSCs) — 16 chaired by Lok Sabha members and 8 chaired by Rajya Sabha members.
 
 > **No API key required to get started.** You can browse, search, and read reports without any setup. AI summaries are optional — and you can use free providers like Ollama, Gemini, or Groq.
 
@@ -15,7 +15,7 @@ ParliamentWatch pulls reports from [sansad.in](https://sansad.in) (the official 
 
 ## Why This Exists
 
-In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are the most robust institutional mechanism through which the legislature exercises control over the executive. There are **16 DRSCs**, each shadowing a cluster of central government ministries. Together, they cover every arm of the Union Government.
+In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are the most robust institutional mechanism through which the legislature exercises control over the executive. There are **24 DRSCs** — 16 chaired by Lok Sabha members and 8 chaired by Rajya Sabha members — each shadowing a cluster of central government ministries. Together, they cover every arm of the Union Government.
 
 These committees examine:
 - **Demands for Grants** — scrutinising how each ministry proposes to spend public money
@@ -41,7 +41,7 @@ ParliamentWatch complements these resources by making it easier to *discover*, *
 
 | Feature | Needs API Key? |
 |---------|---------------|
-| Browse all reports for any of the 16 DRSCs | No |
+| Browse all reports for any of the 24 DRSCs | No |
 | Search report titles by keyword | No |
 | Full-text search across extracted PDFs | No |
 | Search across multiple Lok Sabhas at once | No |
@@ -89,7 +89,7 @@ This opens a browser window at `http://localhost:8501`. That's it — you're run
 
 ### Step 4: Fetch data
 
-Click **"Fetch All Committees"** in the sidebar. This pulls the latest report listings from sansad.in. It takes about a minute for all 16 committees.
+Click **"Fetch All Committees"** in the sidebar. This pulls the latest report listings from sansad.in. It takes about 2 minutes for all 24 committees.
 
 Want historical data too? Use **"Fetch All Historical Data"** to download reports from Lok Sabhas 14–18 (2004 to present) in one go. Data is merged — nothing gets overwritten.
 
@@ -177,7 +177,7 @@ Your API key stays in your browser's session memory only. It is sent directly to
 Everything the web app does is also available from the terminal:
 
 ```bash
-# List all 16 committees
+# List all 24 committees
 python cli.py --list-committees
 
 # Browse a committee's reports
@@ -243,7 +243,9 @@ The workflow runs automatically. You can also trigger it manually from the **Act
 
 ## Committees Covered
 
-All 16 Departmentally Related Standing Committees of the Indian Parliament:
+All 24 Departmentally Related Standing Committees of the Indian Parliament:
+
+**Lok Sabha chaired (16)**
 
 | Committee | Key (for CLI) |
 |-----------|--------------|
@@ -263,6 +265,19 @@ All 16 Departmentally Related Standing Committees of the Indian Parliament:
 | Rural Development and Panchayati Raj | `rural_development` |
 | Social Justice & Empowerment | `social_justice` |
 | Water Resources | `water_resources` |
+
+**Rajya Sabha chaired (8)**
+
+| Committee | Key (for CLI) |
+|-----------|--------------|
+| Commerce | `commerce` |
+| Education, Women, Children, Youth and Sports | `education` |
+| Health and Family Welfare | `health` |
+| Home Affairs | `home_affairs` |
+| Industry | `industry` |
+| Personnel, Public Grievances, Law and Justice | `personnel` |
+| Science and Technology, Environment and Forests | `science` |
+| Transport, Tourism and Culture | `transport` |
 
 ---
 
