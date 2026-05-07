@@ -11,8 +11,9 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 
 BASE_URL = "https://sansad.in"
 
-# API endpoint for committee reports
-REPORTS_API = f"{BASE_URL}/api_ls/committee/lsRSAllReports"
+# API endpoints for committee reports
+REPORTS_API = f"{BASE_URL}/api_ls/committee/lsRSAllReports"  # LS committees
+RS_REPORTS_API = f"{BASE_URL}/api_rs/committee/committee-reports"  # RS committees
 
 # Lok Sabha number (configurable via env or CLI)
 CURRENT_LOK_SABHA = int(os.getenv("LOK_SABHA_NUMBER", "18"))
@@ -104,44 +105,55 @@ DRSC_COMMITTEES = {
         "house": "L",
     },
     # --- Rajya Sabha chaired (8) ---
+    # RS committees use the newer api_rs endpoint, keyed by mst_comm_id (the
+    # number in /rs/committees/{id} URLs). The api_code field below is kept
+    # only as a stale fallback against the legacy api_ls endpoint.
     "commerce": {
         "name": "Commerce",
         "api_code": 13,
+        "mst_comm_id": 12,
         "house": "R",
     },
     "health": {
         "name": "Health and Family Welfare",
         "api_code": 14,
+        "mst_comm_id": 14,
         "house": "R",
     },
     "home_affairs": {
         "name": "Home Affairs",
         "api_code": 15,
+        "mst_comm_id": 15,
         "house": "R",
     },
     "education": {
         "name": "Education, Women, Children, Youth and Sports",
         "api_code": 16,
+        "mst_comm_id": 16,
         "house": "R",
     },
     "industry": {
         "name": "Industry",
         "api_code": 17,
+        "mst_comm_id": 17,
         "house": "R",
     },
     "personnel": {
         "name": "Personnel, Public Grievances, Law and Justice",
         "api_code": 18,
+        "mst_comm_id": 18,
         "house": "R",
     },
     "science": {
         "name": "Science and Technology, Environment and Forests",
         "api_code": 24,
+        "mst_comm_id": 19,
         "house": "R",
     },
     "transport": {
         "name": "Transport, Tourism and Culture",
         "api_code": 31,
+        "mst_comm_id": 20,
         "house": "R",
     },
 }

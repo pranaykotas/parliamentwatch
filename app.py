@@ -96,7 +96,7 @@ def parse_date(date_str):
     """Parse date strings like '18-Mar-2026' into datetime objects."""
     if not date_str:
         return None
-    for fmt in ("%d-%b-%Y", "%d-%B-%Y", "%d/%m/%Y", "%Y-%m-%d"):
+    for fmt in ("%d-%b-%Y", "%d-%B-%Y", "%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
         try:
             return datetime.strptime(date_str.strip(), fmt)
         except (ValueError, AttributeError):

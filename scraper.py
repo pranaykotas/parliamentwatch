@@ -3,7 +3,7 @@
 import json
 import os
 import requests
-from config import REPORTS_API, CURRENT_LOK_SABHA, DRSC_COMMITTEES, REPORTS_JSON, DATA_DIR
+from config import REPORTS_API, RS_REPORTS_API, CURRENT_LOK_SABHA, DRSC_COMMITTEES, REPORTS_JSON, DATA_DIR
 
 
 def ensure_data_dir():
@@ -33,37 +33,26 @@ def sanitize_url(url):
     return url
 
 
-def fetch_committee_reports(committee_key, lok_sabha=None, house=None):
-    """
-    Fetch report listings for a single committee from the sansad.in API.
+_RS_HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Referer": "https://sansad.in/rs/committees",
+}
 
-    Args:
-        committee_key: Short name key from DRSC_COMMITTEES
-        lok_sabha: Lok Sabha number (defaults to CURRENT_LOK_SABHA)
-        house: "L" for Lok Sabha, "R" for Rajya Sabha
 
-    Returns:
-        List of report dicts with standardized keys.
-    """
-    if lok_sabha is None:
-        lok_sabha = CURRENT_LOK_SABHA
-
+def _fetch_ls_committee_reports(committee_key, lok_sabha):
+    """Fetch reports for an LS-chaired committee using the api_ls endpoint."""
     committee = DRSC_COMMITTEES[committee_key]
-    if house is None:
-        house = committee.get("house", "L")
-    house_label = "LS" if house == "L" else "RS"
-    print(f"  Fetching reports for {committee['name']} ({house_label} {lok_sabha})...")
+    print(f"  Fetching reports for {committee['name']} (LS {lok_sabha})...")
 
     params = {
-        "house": house,
+        "house": "L",
         "committeeCode": committee["api_code"],
         "lsNo": lok_sabha,
         "page": 1,
-        "size": 200,  # Fetch all at once
+        "size": 200,
         "sortOn": "reportNo",
         "sortBy": "desc",
     }
-
     try:
         resp = requests.get(REPORTS_API, params=params, timeout=30)
         resp.raise_for_status()
@@ -74,10 +63,9 @@ def fetch_committee_reports(committee_key, lok_sabha=None, house=None):
 
     records = data.get("records", [])
     total = data.get("_metadata", {}).get("totalElements", len(records))
-
     reports = []
     for record in records:
-        report = {
+        reports.append({
             "committee": committee_key,
             "committee_name": record.get("CommitteeName", committee["name"]).strip(),
             "report_number": record.get("reportNo"),
@@ -90,12 +78,86 @@ def fetch_committee_reports(committee_key, lok_sabha=None, house=None):
             "pdf_url": sanitize_url(record.get("url")),
             "pdf_url_hindi": sanitize_url(record.get("urlH")),
             "lok_sabha": record.get("Loksabha", lok_sabha),
-            "house": house,
-        }
-        reports.append(report)
-
+            "house": "L",
+        })
     print(f"  Found {len(reports)} / {total} reports for {committee['name']}")
     return reports
+
+
+def _fetch_rs_committee_reports(committee_key, lok_sabha):
+    """Fetch reports for an RS-chaired committee using the api_rs endpoint.
+
+    The RS endpoint is term-agnostic — it returns all reports regardless of
+    Lok Sabha number. We tag every record with the requested lok_sabha so
+    the rest of the pipeline (which keys by report_number + lok_sabha) keeps
+    working.
+    """
+    committee = DRSC_COMMITTEES[committee_key]
+    mst_comm_id = committee.get("mst_comm_id")
+    if not mst_comm_id:
+        print(f"  Skipping {committee['name']}: no mst_comm_id configured")
+        return []
+
+    print(f"  Fetching reports for {committee['name']} (RS, all terms)...")
+    all_records = []
+    page = 1
+    while True:
+        params = {
+            "mstCommId": mst_comm_id,
+            "departmentId": "",
+            "presentationYear": "",
+            "search": "",
+            "page": page,
+            "size": 200,
+            "sortOn": "reportNo",
+            "sortBy": "desc",
+            "locale": "en",
+        }
+        try:
+            resp = requests.get(RS_REPORTS_API, params=params, headers=_RS_HEADERS, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as e:
+            print(f"  Error fetching {committee['name']}: {e}")
+            break
+        records = data.get("records", [])
+        all_records.extend(records)
+        total = data.get("_metadata", {}).get("totalElements", 0)
+        if len(all_records) >= total or not records:
+            break
+        page += 1
+
+    reports = []
+    for record in all_records:
+        reports.append({
+            "committee": committee_key,
+            "committee_name": record.get("committeeName") or committee["name"],
+            "report_number": record.get("reportNo"),
+            "title": record.get("subjectOfTheReport", ""),
+            "presented_in_ls": None,
+            "laid_in_rs": None,
+            "presented_to_speaker": None,
+            "date_of_presentation": record.get("dateOfPresentation"),
+            "date_of_adoption": record.get("dateOfAdoption"),
+            "pdf_url": sanitize_url(record.get("url")),
+            "pdf_url_hindi": sanitize_url(record.get("urlHindi")),
+            "lok_sabha": lok_sabha,
+            "house": "R",
+        })
+    print(f"  Found {len(reports)} reports for {committee['name']}")
+    return reports
+
+
+def fetch_committee_reports(committee_key, lok_sabha=None, house=None):
+    """Fetch report listings for a committee, dispatching to the right API."""
+    if lok_sabha is None:
+        lok_sabha = CURRENT_LOK_SABHA
+    committee = DRSC_COMMITTEES[committee_key]
+    if house is None:
+        house = committee.get("house", "L")
+    if house == "R":
+        return _fetch_rs_committee_reports(committee_key, lok_sabha)
+    return _fetch_ls_committee_reports(committee_key, lok_sabha)
 
 
 def scrape_all_committees(committee_keys=None, lok_sabha=None, house=None, both_houses=False):
