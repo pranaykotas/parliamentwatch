@@ -330,6 +330,12 @@ Found a bug or want to add a feature? [Open an issue](https://github.com/pranayk
 
 ---
 
+## Acknowledgments
+
+- **Ravichandra Tadigadapa** (Senior PS to the Chairman, Parliamentary Standing Committee on Education) — for flagging that the tool initially covered only the 16 Lok Sabha–chaired DRSCs and prompting the addition of all 8 Rajya Sabha–chaired committees.
+
+---
+
 ## License
 
 MIT
