@@ -148,16 +148,11 @@ def scrape_all_committees(committee_keys=None, lok_sabha=None, house=None, both_
         for h in houses:
             reports = fetch_committee_reports(key, lok_sabha, h)
             for r in reports:
+                # Fresh data from API is authoritative — always overwrite.
+                # This ensures new fields added to the schema (e.g.
+                # date_of_presentation) populate on existing records.
                 rid = (r.get("report_number"), r.get("lok_sabha"))
-                if rid not in existing_reports:
-                    existing_reports[rid] = r
-                else:
-                    # Merge date info from both houses
-                    existing = existing_reports[rid]
-                    if not existing.get("presented_in_ls") and r.get("presented_in_ls"):
-                        existing["presented_in_ls"] = r["presented_in_ls"]
-                    if not existing.get("laid_in_rs") and r.get("laid_in_rs"):
-                        existing["laid_in_rs"] = r["laid_in_rs"]
+                existing_reports[rid] = r
 
         all_reports[key] = sorted(
             existing_reports.values(),
