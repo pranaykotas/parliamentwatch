@@ -115,6 +115,12 @@ def get_report_date(report):
     )
 
 
+def format_report_date(report):
+    """Return a uniformly formatted date string, or '—' if no date available."""
+    d = get_report_date(report)
+    return d.strftime("%d-%b-%Y") if d else "—"
+
+
 def classify_report(title):
     """Classify a report into a category based on its title."""
     t = title.lower()
@@ -325,7 +331,7 @@ def clickable_report_table(reports_list, table_key, show_committee=True, show_pr
     for i, r in enumerate(reports_list):
         report_num = r.get("report_number", "?")
         title = r.get("title", "No title")
-        date = r.get("presented_in_ls") or r.get("laid_in_rs") or "—"
+        date = format_report_date(r)
         badge = category_badge(title)
         ckey = r.get("committee", "")
 
@@ -762,7 +768,7 @@ with tab_committee:
 
         # Display reports with expandable details
         for r in filtered:
-            date = r.get("presented_in_ls") or r.get("laid_in_rs") or "—"
+            date = format_report_date(r)
             category = classify_report(r.get("title", ""))
             house_label = "LS" if r.get("house") == "L" else ("RS" if r.get("house") == "R" else "")
             report_num = r.get("report_number", "?")
