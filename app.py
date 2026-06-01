@@ -590,8 +590,8 @@ with tab_dashboard:
     total_reports = sum(len(v) for v in dash_reports.values())
     committees_with_data = sum(1 for v in dash_reports.values() if v)
 
-    # Find recent reports (last 60 days)
-    recent_cutoff = datetime.now() - timedelta(days=60)
+    # Find recent reports (last 100 days)
+    recent_cutoff = datetime.now() - timedelta(days=100)
     recent_reports = []
     for reports in dash_reports.values():
         for r in reports:
@@ -606,7 +606,7 @@ with tab_dashboard:
     with col2:
         st.metric("Committees", f"{committees_with_data}/{len(DRSC_COMMITTEES)}")
     with col3:
-        st.metric("Recent (60 days)", len(recent_reports))
+        st.metric("Recent (100 days)", len(recent_reports))
     with col4:
         ls_label = f"LS {dash_ls_filter}" if dash_ls_filter != "All" else f"All ({len(_all_ls_numbers)} LS)"
         st.metric("Lok Sabha", ls_label)
@@ -614,10 +614,10 @@ with tab_dashboard:
     # What's New section
     st.subheader("Recent Reports")
     if recent_reports:
-        st.caption(f"{len(recent_reports)} reports from the last 60 days")
+        st.caption(f"{len(recent_reports)} reports from the last 100 days")
         clickable_report_table(recent_reports, "recent")
     else:
-        st.info("No reports found in the last 60 days. Try fetching fresh data.")
+        st.info("No reports found in the last 100 days. Try fetching fresh data.")
 
     # Committee overview grid
     st.subheader("All Committees")

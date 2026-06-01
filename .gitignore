@@ -1,4 +1,5 @@
 .env
+.streamlit/secrets.toml
 data/pdfs/
 data/text/
 data/summaries/
