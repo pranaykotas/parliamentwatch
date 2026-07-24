@@ -1300,7 +1300,7 @@
       "committee": "coal",
       "committee_name": "Coal, Mines and Steel",
       "report_number": 24,
-      "title": "Twenty-Fourth Report on ‘Aatmanirbharta in Steel Sector and Roadmap for ‘Made in India’ Steel Production' pertaining to the Ministry of Steel",
+      "title": "Twenty-Fourth Report on ‘Aatmanirbharta in Steel Sector and Roadmap for ‘Made in India’ Steel Production'' pertaining to the Ministry of Steel",
       "presented_in_ls": "22-Jul-2026",
       "laid_in_rs": "22-Jul-2026",
       "presented_to_speaker": null,
@@ -2040,6 +2040,21 @@
     {
       "committee": "finance",
       "committee_name": "Finance",
+      "report_number": 36,
+      "title": "Report on the Bill ‘The Securities Markets Code, 2025’.",
+      "presented_in_ls": "23-Jul-2026",
+      "laid_in_rs": "23-Jul-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Finance/18_Finance_36.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Finance/18_Finance_36(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
+    {
+      "committee": "finance",
+      "committee_name": "Finance",
       "report_number": 35,
       "title": "Report on 'Demands for Grants (2026-27)' of the Ministry of Statistics and Programme Implementation.",
       "presented_in_ls": "17-Mar-2026",
@@ -2564,6 +2579,36 @@
     }
   ],
   "consumer_affairs": [
+    {
+      "committee": "consumer_affairs",
+      "committee_name": "Consumer Affairs, Food and Public Distribution",
+      "report_number": 16,
+      "title": "16th Report on ‘Modernisation of Public Distribution System: Strengthening Technical Data base’ pertaining to the Ministry of Consumer Affairs, Food and Public Distribution (Department of Food and Public Distribution).",
+      "presented_in_ls": "23-Jul-2026",
+      "laid_in_rs": "23-Jul-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_16.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_16(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
+    {
+      "committee": "consumer_affairs",
+      "committee_name": "Consumer Affairs, Food and Public Distribution",
+      "report_number": 15,
+      "title": "15th Report on ‘Regulation of Packed Commodities with Specific Reference to Sugar Content in Baby Products and Other Food Products’ pertaining to the Ministry of Consumer Affairs, Food and Public Distribution (Department of Consumer Affairs).",
+      "presented_in_ls": "23-Jul-2026",
+      "laid_in_rs": "23-Jul-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_15.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_15(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
     {
       "committee": "consumer_affairs",
       "committee_name": "Consumer Affairs, Food and Public Distribution",
