@@ -350,6 +350,21 @@
     {
       "committee": "agriculture",
       "committee_name": "Agriculture, Animal Husbandry and Food Processing",
+      "report_number": 39,
+      "title": "38th Report on Action Taken by the Government on the Observations/Recommendations \r\ncontained in the Twelfth Report (Eighteenth Lok Sabha) of the Standing \r\nCommittee on Agriculture, Animal Husbandry and Food Processing (2024-25) \r\non Demands for Grants (2025-26)",
+      "presented_in_ls": "27-Mar-2026",
+      "laid_in_rs": "27-Mar-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Agriculture, Animal Husbandry and Food Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_39.pdf?source=app",
+      "pdf_url_hindi": null,
+      "lok_sabha": 18,
+      "house": "L"
+    },
+    {
+      "committee": "agriculture",
+      "committee_name": "Agriculture, Animal Husbandry and Food Processing",
       "report_number": 38,
       "title": "Thirty Eighth Report on Action taken by the Government on the Observations/Recommendations contained in the Twelfth Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on 'Demands for Grants (2025-26)' pertaining to the Ministry of Food Processing Industries. ",
       "presented_in_ls": "27-Mar-2026",
@@ -2639,6 +2654,36 @@
     }
   ],
   "consumer_affairs": [
+    {
+      "committee": "consumer_affairs",
+      "committee_name": "Consumer Affairs, Food and Public Distribution",
+      "report_number": 18,
+      "title": "18th Report on Action Taken on the Observations/ Recommendations contained in the 14th Report of the Committee on Demands for Grants (2026-27) pertaining to the Department of Food and Public Distribution.",
+      "presented_in_ls": "28-Jul-2026",
+      "laid_in_rs": "28-Jul-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_18.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_18(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
+    {
+      "committee": "consumer_affairs",
+      "committee_name": "Consumer Affairs, Food and Public Distribution",
+      "report_number": 17,
+      "title": "17th Report on Action Taken on the Observations/ Recommendations contained in the 13th Report of the Committee on Demands for Grants (2026-27) pertaining to the Department of Consumer Affairs",
+      "presented_in_ls": "28-Jul-2026",
+      "laid_in_rs": "28-Jul-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_17.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Consumer Affairs, Food and Public Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_17(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
     {
       "committee": "consumer_affairs",
       "committee_name": "Consumer Affairs, Food and Public Distribution",
