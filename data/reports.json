@@ -2191,7 +2191,7 @@
       "committee": "finance",
       "committee_name": "Finance",
       "report_number": 34,
-      "title": "Report on 'Demands for Grants (2026-27)' of the Ministry of Planning.",
+      "title": "Report on ''Demands for Grants (2026-27)'' of the Ministry of Planning.",
       "presented_in_ls": "17-Mar-2026",
       "laid_in_rs": "17-Mar-2026",
       "presented_to_speaker": null,
@@ -4723,6 +4723,21 @@
     }
   ],
   "housing": [
+    {
+      "committee": "housing",
+      "committee_name": "Housing and Urban Affairs",
+      "report_number": 10,
+      "title": "Tenth Report of the Standing Committee on Housing and Urban Affairs (2025-26) on the subject, ‘Review of Sewerage and Septage Coverage in Cities with special reference to interventions under Atal Mission for Rejuvenation and Urban Transformation (AMRUT & AMRUT 2.0)’.",
+      "presented_in_ls": "04-Aug-2026",
+      "laid_in_rs": "04-Aug-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Housing and Urban Affairs/18_Housing_and_Urban_Affairs_10.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Housing and Urban Affairs/18_Housing_and_Urban_Affairs_10(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
     {
       "committee": "housing",
       "committee_name": "Housing and Urban Affairs",
