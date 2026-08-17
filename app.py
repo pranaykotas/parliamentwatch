@@ -293,8 +293,13 @@ def show_report_dialog(r):
         text_path = os.path.join(TEXT_DIR, committee_key, f"{safe_name}.txt")
         with open(text_path, "r") as f:
             full_text = f.read()
-        st.info("Text extracted but not yet summarized.")
-        if _has_api_key():
+        if not full_text.strip():
+            st.warning(
+                "No extractable text was found for this report — it's likely a "
+                "scanned/image-only PDF, which this tool can't summarize without OCR."
+            )
+        elif _has_api_key():
+            st.info("Text extracted but not yet summarized.")
             if st.button("Generate Summary", key="dialog_gen_summary", type="primary"):
                 with st.status("Summarizing...", expanded=True) as status:
                     summary = summarize_report(full_text, committee_name, report_num_str, committee_key, **_get_byok_kwargs())
@@ -809,7 +814,8 @@ with tab_committee:
                             try:
                                 with open(text_path, "r") as f:
                                     text = f.read()
-                                summarize_report(text, selected_name, str(rnum), selected_key, **_get_byok_kwargs())
+                                if text.strip():
+                                    summarize_report(text, selected_name, str(rnum), selected_key, **_get_byok_kwargs())
                             except Exception:
                                 pass
                             progress_bar.progress((idx + 1) / len(unsummarized))

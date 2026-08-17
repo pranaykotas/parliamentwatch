@@ -77,6 +77,10 @@ def extract_text(pdf_path, committee_key, report_number):
 
         full_text = "\n\n".join(text_parts)
 
+        if not full_text.strip():
+            print(f"  No extractable text in {len(reader.pages)} pages — likely a scanned/image-only PDF")
+            return None
+
         # Cache the extracted text
         with open(text_path, "w") as f:
             f.write(full_text)
