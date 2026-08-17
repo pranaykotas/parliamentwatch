@@ -96,10 +96,13 @@ def summarize_report(text, committee_name, report_number, committee_key,
             preview += f"\n\n[... showing {preview_len} of {len(text)} characters. Provide an API key for full summary ...]"
         return preview
 
-    # Truncate to fit context window — local models have much smaller contexts
+    # Truncate to fit context window — local models and free-tier rate limits
+    # (e.g. Groq's 8K TPM cap) have much smaller effective budgets than paid APIs.
     effective_base = base_url or LLM_BASE_URL
     if effective_base and "localhost" in effective_base:
         max_chars = 30000  # ~8K tokens, safe for most local models
+    elif effective_base and "groq.com" in effective_base:
+        max_chars = 10000  # stays under Groq free-tier 8K TPM incl. prompt + response
     else:
         max_chars = 400000
     if len(text) > max_chars:

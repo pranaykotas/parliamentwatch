@@ -24,64 +24,74 @@ st.set_page_config(
     layout="wide",
 )
 
-# --- Custom CSS ---
+# --- Custom CSS (Takshashila house style: wine/gold on warm neutrals, hairline
+# rules, zero radius, mono metadata) ---
 st.markdown("""
 <style>
     h1 {
-        color: #1B4F72;
-        border-bottom: 3px solid #1B4F72;
-        padding-bottom: 0.3em;
+        color: #620D3C;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        border-bottom: 1px solid rgba(23, 20, 19, 0.16);
+        padding-bottom: 0.4em;
     }
     [data-testid="stMetric"] {
-        background-color: #F4F6F9;
-        border: 1px solid #D5DBDB;
-        border-radius: 8px;
+        background-color: #F7F5F2;
+        border: 1px solid rgba(23, 20, 19, 0.16);
+        border-radius: 0;
         padding: 12px 16px;
-    }
-    [data-testid="stSidebar"] {
-        border-right: 2px solid #1B4F72;
     }
     .attribution {
         text-align: center;
         padding: 2em 0 1em 0;
-        color: #6C757D;
-        font-size: 0.85em;
-        border-top: 1px solid #DEE2E6;
+        color: rgba(23, 20, 19, 0.50);
+        font-family: 'Roboto Mono', ui-monospace, monospace;
+        font-size: 0.75em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border-top: 1px solid rgba(23, 20, 19, 0.16);
         margin-top: 3em;
     }
-    .attribution a { color: #1B4F72; text-decoration: none; }
+    .attribution a { color: #620D3C; text-decoration: none; }
     .badge {
         display: inline-block;
         padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 0.75em;
-        font-weight: 600;
-        color: white;
+        border: 1px solid rgba(23, 20, 19, 0.16);
+        border-radius: 0;
+        font-family: 'Roboto Mono', ui-monospace, monospace;
+        font-size: 0.7em;
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(23, 20, 19, 0.70);
+        background: transparent;
         margin-right: 4px;
     }
-    .badge-dfg { background-color: #2E86C1; }
-    .badge-action { background-color: #28B463; }
-    .badge-assurance { background-color: #AF7AC5; }
-    .badge-bill { background-color: #E74C3C; }
-    .badge-subject { background-color: #85929E; }
+    .badge-dfg { border-color: #620D3C; color: #620D3C; }
+    .badge-action { border-color: #F1A222; color: #7a5c11; }
     .welcome-box {
         text-align: center;
         padding: 3em 2em;
-        background: linear-gradient(135deg, #F4F6F9 0%, #E8EDF2 100%);
-        border-radius: 12px;
-        border: 1px solid #D5DBDB;
+        background: #F7F5F2;
+        border-radius: 0;
+        border: 1px solid rgba(23, 20, 19, 0.16);
         margin: 2em 0;
     }
-    .welcome-box h2 { color: #1B4F72; margin-bottom: 0.5em; }
+    .welcome-box h2 {
+        color: #620D3C;
+        font-weight: 400;
+        margin-bottom: 0.5em;
+    }
     .progress-bar-bg {
-        background-color: #E5E8E8;
-        border-radius: 4px;
+        background-color: #F7F5F2;
+        border: 1px solid rgba(23, 20, 19, 0.16);
+        border-radius: 0;
         height: 8px;
         width: 100%;
     }
     .progress-bar-fill {
-        background-color: #2E86C1;
-        border-radius: 4px;
+        background-color: #620D3C;
+        border-radius: 0;
         height: 8px;
     }
 </style>
@@ -294,6 +304,7 @@ def show_report_dialog(r):
                     elif summary:
                         status.update(label="Done", state="complete")
                         st.markdown(summary)
+                        _truncation_notice()
                     else:
                         status.update(label="LLM returned no response — check your API key and provider", state="error")
         else:
@@ -321,6 +332,7 @@ def show_report_dialog(r):
                         elif summary:
                             status.update(label="Summary generated!", state="complete")
                             st.markdown(summary)
+                            _truncation_notice()
                         else:
                             status.update(label="LLM returned no response — check your API key and provider", state="error")
         else:
@@ -422,15 +434,31 @@ _PROVIDER_PRESETS = {
     "Anthropic (Claude)": ("anthropic", "claude-sonnet-4-20250514", "", True),
     "OpenAI (GPT)": ("openai", "gpt-4o", "", True),
     "Google Gemini (free tier)": ("openai", "gemini-2.0-flash", "https://generativelanguage.googleapis.com/v1beta/openai/", True),
-    "Groq (free tier)": ("openai", "llama-3.3-70b-versatile", "https://api.groq.com/openai/v1", True),
+    "Groq (free tier)": ("openai", "openai/gpt-oss-120b", "https://api.groq.com/openai/v1", True),
     "OpenRouter (free models)": ("openai", "meta-llama/llama-4-maverick:free", "https://openrouter.ai/api/v1", True),
     "OpenCode Zen": ("openai", "claude-sonnet-4-6", "https://opencode.ai/zen/v1", True),
     "Ollama (local, no key)": ("openai", "llama3.2", "http://localhost:11434/v1", False),
     "Custom (OpenAI-compatible)": ("openai", "", "", True),
 }
 
+_server_key_configured = bool(
+    st.secrets.get("LLM_API_KEY", "") and st.secrets.get("LLM_API_KEY") != "your-groq-api-key-here"
+)
+
 with st.sidebar.expander("AI Summarization", expanded=False):
-    st.caption("Bring your own API key to enable AI-powered summaries.")
+    if _server_key_configured:
+        st.caption(
+            f"✅ Free AI summaries are active by default, powered by "
+            f"{st.secrets.get('LLM_MODEL', 'the configured model')} via "
+            f"{st.secrets.get('LLM_PROVIDER', 'the server')}. No key needed — "
+            f"just click **Extract & Summarize** on any report. "
+            f"Bring your own key below to use a different provider or model, "
+            f"or to summarize the full report text instead of a truncated preview."
+        )
+    else:
+        st.caption(
+            "Bring your own API key to enable AI-powered summaries."
+        )
 
     byok_preset = st.selectbox(
         "LLM Provider",
@@ -484,23 +512,44 @@ with st.sidebar.expander("AI Summarization", expanded=False):
         st.button("Clear API Key", type="secondary", use_container_width=True, on_click=_clear_api_key)
 
     st.markdown(
-        '<div style="font-size: 0.75em; color: #6C757D; line-height: 1.4; margin-top: 0.5em;">'
+        '<div style="font-size: 0.75em; color: rgba(23, 20, 19, 0.70); line-height: 1.4; margin-top: 0.5em;">'
         '🔒 <strong>Privacy:</strong> Your API key stays in your browser session memory only. '
         'It is sent directly to your chosen LLM provider and nowhere else. '
         'Nothing is logged, stored on disk, or transmitted to our servers. '
         'The key is automatically erased when you close this tab. '
-        '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #1B4F72;">'
+        '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #620D3C;">'
         'Verify in source code</a>.</div>',
         unsafe_allow_html=True,
     )
 
 
+def _server_key_kwargs():
+    """Return server-side LLM credentials from Streamlit secrets, if configured."""
+    server_key = st.secrets.get("LLM_API_KEY", "")
+    if not server_key or server_key == "your-groq-api-key-here":
+        return None
+    return {
+        "api_key": server_key,
+        "provider": st.secrets.get("LLM_PROVIDER", "openai"),
+        "model": st.secrets.get("LLM_MODEL", ""),
+        "base_url": st.secrets.get("LLM_BASE_URL", ""),
+    }
+
+
 def _get_byok_kwargs():
-    """Return BYOK credentials dict to pass to summarize_report."""
+    """Return LLM credentials to pass to summarize_report.
+
+    Prefers a user-entered BYOK key (their own provider); falls back to the
+    server-side key in secrets.toml so visitors get summaries with no setup.
+    """
     _backend, _def_model, _def_url, _needs_key = _PROVIDER_PRESETS[
         st.session_state.get("byok_preset", "Anthropic (Claude)")
     ]
     api_key = st.session_state.get("byok_api_key", "") if _needs_key else "ollama"
+    if not api_key:
+        server_kwargs = _server_key_kwargs()
+        if server_kwargs:
+            return server_kwargs
     return {
         "api_key": api_key,
         "provider": _backend,
@@ -510,13 +559,36 @@ def _get_byok_kwargs():
 
 
 def _has_api_key():
-    """Check if user has entered an API key or is using a keyless provider."""
+    """Check if a key is available — user-entered, keyless provider, or server-side."""
     _backend, _def_model, _def_url, needs_key = _PROVIDER_PRESETS[
         st.session_state.get("byok_preset", "Anthropic (Claude)")
     ]
     if not needs_key:
         return True  # Ollama doesn't need a key
-    return bool(st.session_state.get("byok_api_key"))
+    if st.session_state.get("byok_api_key"):
+        return True
+    return _server_key_kwargs() is not None
+
+
+def _using_server_key():
+    """True when the summary about to be generated will use the free server-side
+    key rather than a key the visitor entered themselves."""
+    _backend, _def_model, _def_url, needs_key = _PROVIDER_PRESETS[
+        st.session_state.get("byok_preset", "Anthropic (Claude)")
+    ]
+    if needs_key and not st.session_state.get("byok_api_key"):
+        return _server_key_kwargs() is not None
+    return False
+
+
+def _truncation_notice():
+    """Caption shown after a free-tier summary, since it's based on truncated text."""
+    if _using_server_key():
+        st.caption(
+            "This summary is based on the first part of the report only, to stay "
+            "within the free tier's limits. For a summary of the full text, "
+            "enter your own API key in the sidebar (see 'AI Summarization')."
+        )
 
 
 # --- Main content: Tabs ---
@@ -524,13 +596,13 @@ if not has_data():
     st.markdown(
         '<div class="welcome-box">'
         '<h2>Welcome to ParliamentWatch</h2>'
-        '<p style="font-size: 1.1em; color: #5D6D7E;">Track, search, and summarize Indian Parliamentary Committee reports</p>'
-        '<p style="color: #85929E;">To get started, click <strong>Fetch All Committees</strong> in the sidebar.<br>'
+        '<p style="font-size: 1.1em; color: rgba(23, 20, 19, 0.70);">Track, search, and summarize Indian Parliamentary Committee reports</p>'
+        '<p style="color: rgba(23, 20, 19, 0.50);">To get started, click <strong>Fetch All Committees</strong> in the sidebar.<br>'
         'This will download report listings for all 16 DRSCs from sansad.in.</p>'
-        '<p style="font-size: 0.85em; color: #ABB2B9; margin-top: 1.5em;">'
+        '<p style="font-size: 0.85em; color: rgba(23, 20, 19, 0.50); margin-top: 1.5em;">'
         'No API key needed for browsing and searching. Add one in the sidebar for AI summaries.<br>'
         'For persistent summaries and full control, '
-        '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #1B4F72;">fork the repo</a> and run locally.</p>'
+        '<a href="https://github.com/pranaykotas/parliamentwatch" style="color: #620D3C;">fork the repo</a> and run locally.</p>'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -727,6 +799,7 @@ with tab_committee:
                                if has_text(selected_key, r.get("report_number", 0))
                                and not has_summary(selected_key, r.get("report_number", 0))]
                 if unsummarized:
+                    _truncation_notice()
                     if st.button(f"Summarize All ({len(unsummarized)})", key="batch_summarize", type="primary"):
                         progress_bar = st.progress(0)
                         for idx, r in enumerate(unsummarized):
@@ -831,6 +904,7 @@ with tab_committee:
                                         st.error(summary.replace("__ERROR__:", ""))
                                     elif summary:
                                         status.update(label="Summary generated!", state="complete")
+                                        _truncation_notice()
                                     else:
                                         status.update(label="LLM returned no response — check your API key and provider", state="error")
                 else:
@@ -1254,7 +1328,8 @@ ParliamentWatch complements these resources by making it easier to *discover*, *
 st.markdown(
     '<div class="attribution">'
     'Created by <strong>Pranay Kotasthane</strong> using Claude Opus &nbsp;|&nbsp; '
-    '<a href="https://github.com/pranaykotas/parliamentwatch" target="_blank">GitHub</a>'
+    '<a href="https://github.com/pranaykotas/parliamentwatch" target="_blank">GitHub</a> &nbsp;|&nbsp; '
+    '<a href="https://takshashila.org.in" target="_blank">Takshashila Institution</a>'
     '</div>',
     unsafe_allow_html=True,
 )

@@ -1,7 +1,25 @@
 [theme]
 base = "light"
-primaryColor = "#1B4F72"
+
+# Takshashila brand — wine primary, deep cream secondary surface, near-black ink
+primaryColor = "#620d3c"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F4F6F9"
-textColor = "#1C1C1C"
-font = "sans serif"
+secondaryBackgroundColor = "#F7F5F2"
+textColor = "#171413"
+linkColor = "#620d3c"
+borderColor = "rgba(23, 20, 19, 0.16)"
+
+# Zero border-radius, hairline borders — house style has no rounded corners or shadows
+baseRadius = "none"
+buttonRadius = "none"
+showWidgetBorder = true
+showSidebarBorder = true
+
+# Inter for everything with words in it; Roboto Mono for metadata (captions, code, labels)
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+headingFont = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+codeFont = "Roboto Mono:https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap"
+
+# Big type gets its authority from size, never bold
+headingFontWeights = 400
+metricValueFontWeight = 400
