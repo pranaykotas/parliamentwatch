@@ -10,6 +10,7 @@ from summarizer import summarize_report
 from notifier import check_for_new_reports, save_notification
 from exporter import export_csv, export_markdown
 from committee_members import fetch_all_committee_members
+from feed import generate_rss
 
 
 def list_committees():
@@ -278,6 +279,11 @@ def main():
         action="store_true",
         help="Send a test email to verify SMTP configuration",
     )
+    parser.add_argument(
+        "--export-feed",
+        action="store_true",
+        help="Write an RSS feed of recent reports to data/feed.xml, for RSS-to-email subscription services",
+    )
 
     args = parser.parse_args()
 
@@ -287,6 +293,10 @@ def main():
         return
     elif args.test_email:
         send_test_email()
+        return
+    elif args.export_feed:
+        committee = args.committee if args.committee else None
+        generate_rss(committee_key=committee)
         return
     elif args.list_committees:
         list_committees()

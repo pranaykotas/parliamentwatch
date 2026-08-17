@@ -527,6 +527,23 @@ with st.sidebar.expander("AI Summarization", expanded=False):
         unsafe_allow_html=True,
     )
 
+_FEED_URL = "https://raw.githubusercontent.com/pranaykotas/parliamentwatch/main/data/feed.xml"
+
+with st.sidebar.expander("📬 Get Email Updates", expanded=False):
+    st.caption(
+        "ParliamentWatch publishes an RSS feed of new reports, updated daily. "
+        "Use a free RSS-to-email service to get new reports in your inbox — "
+        "no sign-up with us required."
+    )
+    st.markdown(
+        "1. Copy the feed URL below.\n"
+        "2. Paste it into a service like "
+        "[Blogtrottr](https://blogtrottr.com/) or [Feedrabbit](https://feedrabbit.com/), "
+        "and enter your email.\n"
+        "3. You'll get an email whenever a new report is added."
+    )
+    st.code(_FEED_URL, language=None)
+
 
 def _server_key_kwargs():
     """Return server-side LLM credentials from Streamlit secrets, if configured."""
