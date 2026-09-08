@@ -260,8 +260,8 @@ def main():
         "--house",
         type=str,
         choices=["L", "R"],
-        default="L",
-        help="House: L=Lok Sabha (default), R=Rajya Sabha",
+        default=None,
+        help="Restrict --scrape to one house: L=Lok Sabha, R=Rajya Sabha (default: both, each committee uses its own configured house)",
     )
     parser.add_argument(
         "--export",
