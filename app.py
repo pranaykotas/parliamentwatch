@@ -389,9 +389,13 @@ st.sidebar.header("Data Controls")
 if has_data():
     all_reports = load_existing_reports()
     total = sum(len(v) for v in all_reports.values())
-    committees_with_data = sum(1 for v in all_reports.values() if v)
+    committees_with_data = sum(1 for k in DRSC_COMMITTEES if all_reports.get(k))
+    jpc_with_data = sum(1 for k, v in all_reports.items() if k.startswith("jpc_") and v)
     st.sidebar.metric("Reports in database", total)
-    st.sidebar.caption(f"{committees_with_data} of {len(DRSC_COMMITTEES)} committees")
+    committees_caption = f"{committees_with_data} of {len(DRSC_COMMITTEES)} committees"
+    if jpc_with_data:
+        committees_caption += f" + {jpc_with_data} JPC/Select Committees"
+    st.sidebar.caption(committees_caption)
 else:
     st.sidebar.warning("No data yet. Fetch reports to get started.")
 
@@ -682,7 +686,7 @@ with tab_dashboard:
 
     # Top-level metrics
     total_reports = sum(len(v) for v in dash_reports.values())
-    committees_with_data = sum(1 for v in dash_reports.values() if v)
+    committees_with_data = sum(1 for k in DRSC_COMMITTEES if dash_reports.get(k))
 
     # Find recent reports (last 100 days)
     recent_cutoff = datetime.now() - timedelta(days=100)
@@ -1013,6 +1017,11 @@ with tab_committee:
 # ============================================================
 with tab_search:
     st.subheader("Search Reports")
+    st.caption(
+        "Title search covers every report we know about. Full-text search only covers "
+        "reports whose PDF has been downloaded and its text extracted (via Committee Deep Dive "
+        "or Extract & Summarize); everything else stays title-only until it's been downloaded."
+    )
 
     search_col1, search_col2, search_col3, search_col4 = st.columns([3, 1, 1, 0.5])
     with search_col1:
@@ -1304,17 +1313,25 @@ with tab_why:
 
 In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are
 the most robust institutional mechanism through which the legislature exercises control over the
-executive. There are **24 DRSCs** — 16 chaired by Lok Sabha members, 8 by Rajya Sabha members —
+executive. There are **24 DRSCs**: 16 chaired by Lok Sabha members and 8 by Rajya Sabha members,
 each shadowing a cluster of central government ministries, together covering every arm of the
-Union Government. ParliamentWatch also tracks Parliament's three standing **Financial
-Committees** — Public Accounts, Estimates, and Public Undertakings — which scrutinise government
-spending and CAG audit findings across every ministry, not just one.
+Union Government.
 
-These committees examine:
-- **Demands for Grants** — scrutinising how each ministry proposes to spend public money
-- **Bills** referred to them by Parliament — providing detailed clause-by-clause analysis
-- **Policy subjects** — investigating issues of national importance on their own initiative
-- **CAG audit findings and PSU performance** — the Financial Committees' specific remit
+ParliamentWatch also tracks two other categories of committee reports:
+
+- **Financial Committees** (3, standing): Public Accounts, Estimates, and Public Undertakings.
+  These scrutinise government spending and CAG audit findings across every ministry, not just one.
+- **Joint Parliamentary Committees and Select Committees** (ad hoc): formed to examine a specific
+  Bill and dissolved once their report is presented, for example the Joint Committee on the Waqf
+  (Amendment) Bill or the Select Committee on the Income-Tax Bill. Because these form and dissolve
+  continuously, ParliamentWatch re-discovers the current list from sansad.in on every check rather
+  than relying on a fixed list, so newly formed committees are picked up automatically.
+
+Together, these committees examine:
+- **Demands for Grants**: scrutinising how each ministry proposes to spend public money
+- **Bills** referred to them by Parliament: detailed clause-by-clause analysis
+- **Policy subjects**: issues of national importance taken up on a committee's own initiative
+- **CAG audit findings and PSU performance**: the Financial Committees' specific remit
 
 Their reports are non-partisan, evidence-based documents that draw on testimonies from
 government officials, domain experts, and field visits. Unlike floor debates, committee
@@ -1328,13 +1345,13 @@ what a 200-page PDF says. ParliamentWatch aims to change that.
 
 ### What Makes This Tool Different
 
-- **Unified access** to all 24 DRSCs across both Lok Sabha and Rajya Sabha, plus the 3 Financial Committees, with historical data going back multiple Lok Sabhas
-- **Full-text search** across extracted report PDFs — not just titles
-- **AI-powered summaries** using your own API key (Bring Your Own Key) — choose from free providers like Ollama, Gemini, or Groq, or paid ones like Claude and GPT
+- **Unified access** to all 24 DRSCs across both Lok Sabha and Rajya Sabha, the 3 Financial Committees, and current Joint Parliamentary/Select Committees, with historical data going back multiple Lok Sabhas
+- **Full-text search** across reports whose PDF has been downloaded and extracted, in addition to title search across everything
+- **AI-powered summaries** using your own API key (Bring Your Own Key): choose from free providers like Ollama, Gemini, or Groq, or paid ones like Claude and GPT
 - **Daily email alerts** when new reports are published, via GitHub Actions
-- **Batch operations** — fetch all historical data and summarise entire committees in one click
-- **Export everything** — metadata, summaries, and full text in CSV or Markdown
-- **Fully open source** — verify every line of code, contribute improvements, or fork it for your own use
+- **Batch operations**: fetch all historical data and summarise entire committees in one click
+- **Export everything**: metadata, summaries, and full text in CSV or Markdown
+- **Fully open source**: verify every line of code, contribute improvements, or fork it for your own use
 
 ---
 
@@ -1342,13 +1359,13 @@ what a 200-page PDF says. ParliamentWatch aims to change that.
 
 For the **official repository** of parliamentary documents, visit:
 
-**[ePARLIB — eParliament Library](https://eparlib.sansad.in/)** — the government's digital archive of parliamentary papers, including committee reports, debates, questions, and more.
+**[ePARLIB, the eParliament Library](https://eparlib.sansad.in/)**: the government's digital archive of parliamentary papers, including committee reports, debates, questions, and more.
 
 For **excellent analytical deep-dives** into parliamentary functioning, committee performance, and legislative tracking:
 
-**[PRS Legislative Research](https://prsindia.org/)** — an independent research organisation that tracks Parliament, analyses Bills and committee reports, and publishes accessible summaries and data. If you want expert commentary on what these committees are doing, PRS is the gold standard.
+**[PRS Legislative Research](https://prsindia.org/)**: an independent research organisation that tracks Parliament, analyses Bills and committee reports, and publishes accessible summaries and data. If you want expert commentary on what these committees are doing, PRS is the gold standard.
 
-ParliamentWatch complements these resources by making it easier to *discover*, *search*, and *summarise* committee reports using AI — bridging the gap between raw government data and actionable insights.
+ParliamentWatch complements these resources by making it easier to *discover*, *search*, and *summarise* committee reports using AI, bridging the gap between raw government data and actionable insights.
 """)
 
 # --- Attribution footer ---
