@@ -1046,7 +1046,7 @@ with tab_search:
         fulltext_results = []
         if search_scope == "Titles + Full text" and os.path.exists(TEXT_DIR):
             query_lower = query.lower()
-            committees_to_search = [filter_key] if filter_key else list(DRSC_COMMITTEES.keys())
+            committees_to_search = [filter_key] if filter_key else list(all_reports.keys())
 
             for ckey in committees_to_search:
                 committee_text_dir = os.path.join(TEXT_DIR, ckey)
@@ -1095,7 +1095,7 @@ with tab_search:
             if search_scope == "Titles + Full text":
                 # Count how many reports have extracted text
                 text_count = 0
-                committees_to_count = [filter_key] if filter_key else list(DRSC_COMMITTEES.keys())
+                committees_to_count = [filter_key] if filter_key else list(all_reports.keys())
                 for ckey in committees_to_count:
                     cdir = os.path.join(TEXT_DIR, ckey)
                     if os.path.isdir(cdir):

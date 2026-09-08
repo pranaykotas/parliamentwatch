@@ -47037,5 +47037,103 @@
       "lok_sabha": 18,
       "house": "L"
     }
-  ]
+  ],
+  "jpc_67": [],
+  "jpc_68": [],
+  "jpc_69": [],
+  "jpc_71": [],
+  "jpc_72": [],
+  "jpc_73": [],
+  "jpc_74": [],
+  "jpc_75": [],
+  "jpc_76": [],
+  "jpc_77": [],
+  "jpc_79": [
+    {
+      "committee": "jpc_79",
+      "committee_name": "Joint Committee on the Waqf (Amendment) Bill, 2024",
+      "report_number": 1,
+      "title": "Report of the Joint Committee on Waqf (Amendment) Bill, 2024",
+      "presented_in_ls": "13-Feb-2025",
+      "laid_in_rs": "13-Feb-2025",
+      "presented_to_speaker": "30-Jan-2025",
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Joint Committee on the Waqf (Amendment) Bill, 2024/18_Joint_Committee_on_the_Waqf_(Amendment)_Bill_2024_1.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Joint Committee on the Waqf (Amendment) Bill, 2024/18_Joint_Committee_on_the_Waqf_(Amendment)_Bill_2024_1(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    }
+  ],
+  "jpc_80": [],
+  "jpc_81": [
+    {
+      "committee": "jpc_81",
+      "committee_name": "Select Committee of Lok Sabha to Examine the Income-Tax Bill 2025",
+      "report_number": 1,
+      "title": "Report of the Select Committee of Lok Sabha to Examine the Income-Tax Bill, 2025",
+      "presented_in_ls": "21-Jul-2025",
+      "laid_in_rs": null,
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Select Committee of Lok Sabha to Examine the Income-Tax Bill 2025/18_Select_Committee_of_Lok_Sabha_to_Examine_the_Income-Tax_Bill_2025_1.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Select Committee of Lok Sabha to Examine the Income-Tax Bill 2025/18_Select_Committee_of_Lok_Sabha_to_Examine_the_Income-Tax_Bill_2025_1(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    }
+  ],
+  "jpc_82": [
+    {
+      "committee": "jpc_82",
+      "committee_name": "Select Committee on The Insolvency And Bankruptcy Code (Amendment) Bill, 2025",
+      "report_number": 1,
+      "title": "Report of the Select Committee on Insolvency and Bankruptcy Code (Amendment) Bill, 2025",
+      "presented_in_ls": "17-Dec-2025",
+      "laid_in_rs": null,
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Select Committee on The Insolvency And Bankruptcy Code (Amendment) Bill, 2025/18_Select_Committee_on_The_Insolvency_And_Bankruptcy_Code_(Amendment)_Bill_2025_1.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Select Committee on The Insolvency And Bankruptcy Code (Amendment) Bill, 2025/18_Select_Committee_on_The_Insolvency_And_Bankruptcy_Code_(Amendment)_Bill_2025_1(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    }
+  ],
+  "jpc_83": [
+    {
+      "committee": "jpc_83",
+      "committee_name": "Select Committee on the Jan Vishwas (Amendment of Provisions) Bill, 2025",
+      "report_number": 1,
+      "title": "THE SELECT COMMITTEE ON THE JAN VISHWAS (AMENDMENT OF PROVISIONS) BILL, 2025",
+      "presented_in_ls": "13-Mar-2026",
+      "laid_in_rs": null,
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Select Committee on the Jan Vishwas (Amendment of Provisions) Bill, 2025/18_Select_Committee_on_the_Jan_Vishwas_(Amendment_of_Provisions)_Bill_2025_1.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Select Committee on the Jan Vishwas (Amendment of Provisions) Bill, 2025/18_Select_Committee_on_the_Jan_Vishwas_(Amendment_of_Provisions)_Bill_2025_1(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    }
+  ],
+  "jpc_84": [],
+  "jpc_86": [
+    {
+      "committee": "jpc_86",
+      "committee_name": "Joint Committee on the Corporate Laws (Amendment) Bill, 2026",
+      "report_number": 1,
+      "title": "The Corporate Laws (Amendment) Bill, 2026",
+      "presented_in_ls": "03-Aug-2026",
+      "laid_in_rs": "03-Aug-2026",
+      "presented_to_speaker": null,
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Joint Committee on the Corporate Laws (Amendment) Bill, 2026/18_Joint_Committee_on_the_Corporate_Laws_(Amendment)_Bill_2026_1.pdf?source=app",
+      "pdf_url_hindi": null,
+      "lok_sabha": 18,
+      "house": "L"
+    }
+  ],
+  "jpc_85": []
 }

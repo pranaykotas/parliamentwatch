@@ -1,0 +1,110 @@
+{
+  "jpc_67": {
+    "name": "Joint Committee on the Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement (Second Amendment) Bill, 2015",
+    "api_code": 67,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_68": {
+    "name": "Joint Committee on Insolvency and Bankruptcy Code, 2015",
+    "api_code": 68,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_69": {
+    "name": "Joint Committee on the Enforcement of Security Interest and Recovery of Debts Laws and Miscellaneous Provisions (Amendment) Bill,2016",
+    "api_code": 69,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_71": {
+    "name": "Joint Committee on Bill to amend the Citizenship Act, 1955",
+    "api_code": 71,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_72": {
+    "name": "Joint Committee on the Financial Resolution and Deposit Insurance Bill, 2017",
+    "api_code": 72,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_73": {
+    "name": "Joint Committee on the Personal Data Protection Bill, 2019",
+    "api_code": 73,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_74": {
+    "name": "Joint Committee on the Biological Diversity (Amendment) Bill, 2021",
+    "api_code": 74,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_75": {
+    "name": "Joint Committee on the Multi-State Co-operative Societies (Amendment) Bill, 2022",
+    "api_code": 75,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_76": {
+    "name": "Joint Committee on the Jan Vishwas (Amendment of Provisions) Bill, 2022",
+    "api_code": 76,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_77": {
+    "name": "Joint Committee on the Forest (Conservation) Amendment Bill, 2023",
+    "api_code": 77,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_79": {
+    "name": "Joint Committee on the Waqf (Amendment) Bill, 2024",
+    "api_code": 79,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_80": {
+    "name": "Joint Committee on the Constitution (One Hundred and Twenty-Ninth Amendment) Bill, 2024 and the Union Territories Laws (Amendment) Bill, 2024",
+    "api_code": 80,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_81": {
+    "name": "Select Committee of Lok Sabha to Examine the Income-Tax Bill 2025",
+    "api_code": 81,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_82": {
+    "name": "Select Committee on The Insolvency And Bankruptcy Code (Amendment) Bill, 2025",
+    "api_code": 82,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_83": {
+    "name": "Select Committee on the Jan Vishwas (Amendment of Provisions) Bill, 2025",
+    "api_code": 83,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_84": {
+    "name": "JCCA and UTB",
+    "api_code": 84,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_86": {
+    "name": "Joint Committee on the Corporate Laws (Amendment) Bill, 2026",
+    "api_code": 86,
+    "house": "L",
+    "category": "jpc"
+  },
+  "jpc_85": {
+    "name": "Joint Committee on Viksit Bharat Shiksha Adhishthan Bill, 2025",
+    "api_code": 85,
+    "house": "L",
+    "category": "jpc"
+  }
+}

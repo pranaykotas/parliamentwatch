@@ -3,6 +3,7 @@
 import os
 from urllib.parse import quote
 from scraper import detect_new_reports
+from jpc import detect_new_jpc_reports
 from config import DATA_DIR
 
 
@@ -29,6 +30,15 @@ def check_for_new_reports(committee_keys=None):
     """
     print("Checking for new committee reports...")
     new_reports = detect_new_reports(committee_keys)
+
+    # JPCs/Select Committees are a separate, dynamically-discovered registry
+    # (see jpc.py) -- only run this on a full check, not a --committees-scoped one.
+    if committee_keys is None:
+        print("Checking for new/updated Joint Parliamentary and Select Committees...")
+        try:
+            new_reports += detect_new_jpc_reports()
+        except Exception as e:
+            print(f"  Error checking JPCs: {e}")
 
     if not new_reports:
         print("No new reports found.")

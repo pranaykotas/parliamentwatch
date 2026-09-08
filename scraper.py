@@ -44,9 +44,15 @@ _RS_HEADERS = {
 }
 
 
-def _fetch_ls_committee_reports(committee_key, lok_sabha):
-    """Fetch reports for an LS-chaired committee using the api_ls endpoint."""
-    committee = DRSC_COMMITTEES[committee_key]
+def _fetch_ls_committee_reports(committee_key, lok_sabha, committee=None):
+    """Fetch reports for an LS-chaired committee using the api_ls endpoint.
+
+    `committee` lets callers outside DRSC_COMMITTEES (e.g. the dynamically
+    discovered JPC registry in jpc.py) reuse this fetch/parse logic without
+    being registered in config.py.
+    """
+    if committee is None:
+        committee = DRSC_COMMITTEES[committee_key]
     print(f"  Fetching reports for {committee['name']} (LS {lok_sabha})...")
 
     params = {

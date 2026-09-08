@@ -4,7 +4,7 @@
 <title>ParliamentWatch — New Committee Reports</title>
 <link>https://parliamentcommittee.streamlit.app/</link>
 <description>New Indian Parliamentary Committee reports as they&#x27;re published, tracked across all 24 Departmentally Related Standing Committees.</description>
-<lastBuildDate>Tue, 08 Sep 2026 08:26:10 +0000</lastBuildDate>
+<lastBuildDate>Tue, 08 Sep 2026 08:33:57 +0000</lastBuildDate>
 <item>
 <title>Agriculture, Animal Husbandry and Food Processing: Forty Sixth Report on Action Taken by the Government on the Observations/Recommendations contained in the Thirty Fourth Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2025-26) on the Subject &#x27;Research for Developing Water Efficient Variety of Seeds to Save Ground Water&#x27; pertaining to the Ministry Agriculture and Farmers Welfare (Department of Agcultural Research and Education)</title>
 <link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_46.pdf?source=app</link>
@@ -617,6 +617,13 @@ INSURANCE SECTOR CPSUS</description>
 <description>Report No. 52 — Construction of Dimapur-Kohima New Line Project: Northeast Frontier Railway</description>
 </item>
 <item>
+<title>Joint Committee on the Corporate Laws (Amendment) Bill, 2026: The Corporate Laws (Amendment) Bill, 2026</title>
+<link>https://sansad.in/getFile/app/lsscommittee/Joint%20Committee%20on%20the%20Corporate%20Laws%20(Amendment)%20Bill,%202026/18_Joint_Committee_on_the_Corporate_Laws_(Amendment)_Bill_2026_1.pdf?source=app</link>
+<guid isPermaLink="false">jpc_86-18-1</guid>
+<pubDate>Mon, 03 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 1 — The Corporate Laws (Amendment) Bill, 2026</description>
+</item>
+<item>
 <title>Rural Development and Panchayati Raj: Action taken on the recommendations contained in the Seventeenth Report on “Pradhan Mantri Gram Sadak Yojana (PMGSY)” (2024-25) of the Ministry of Rural Development (Department of Rural Development)</title>
 <link>https://sansad.in/getFile/app/lsscommittee/Rural%20Development%20and%20Panchayati%20Raj/18_Rural_Development_and_Panchayati_Raj_34.pdf?source=app</link>
 <guid isPermaLink="false">rural_development-18-34</guid>
@@ -699,13 +706,6 @@ INSURANCE SECTOR CPSUS</description>
 <guid isPermaLink="false">finance-18-36</guid>
 <pubDate>Thu, 23 Jul 2026 00:00:00 +0000</pubDate>
 <description>Report No. 36 — Report on the Bill ‘The Securities Markets Code, 2025’.</description>
-</item>
-<item>
-<title>Consumer Affairs, Food and Public Distribution: 16th Report on ‘Modernisation of Public Distribution System: Strengthening Technical Data base’ pertaining to the Ministry of Consumer Affairs, Food and Public Distribution (Department of Food and Public Distribution).</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Consumer%20Affairs,%20Food%20and%20Public%20Distribution/18_Consumer_Affairs_Food_and_Public_Distribution_16.pdf?source=app</link>
-<guid isPermaLink="false">consumer_affairs-18-16</guid>
-<pubDate>Thu, 23 Jul 2026 00:00:00 +0000</pubDate>
-<description>Report No. 16 — 16th Report on ‘Modernisation of Public Distribution System: Strengthening Technical Data base’ pertaining to the Ministry of Consumer Affairs, Food and Public Distribution (Department of Food and Public Distribution).</description>
 </item>
 </channel>
 </rss>
