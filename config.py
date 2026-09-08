@@ -13,7 +13,12 @@ BASE_URL = "https://sansad.in"
 
 # API endpoints for committee reports
 REPORTS_API = f"{BASE_URL}/api_ls/committee/lsRSAllReports"  # LS committees
-RS_REPORTS_API = f"{BASE_URL}/api_rs/committee/committee-reports"  # RS committees
+# RS committees. sansad.in's own api_rs endpoint (BASE_URL/api_rs/committee/committee-reports)
+# stopped receiving new data around Q1-Q2 2026 -- every RS DRSC's most recent report there
+# is stuck between Mar-Jun 2026. sansad.in's own frontend has since moved to this endpoint
+# (found via its committee-page JS bundle, param GetCommitteeReportsRS), which is current.
+RS_REPORTS_API = "https://integration.rajyasabha.digital/committee-integration/api/v1/web/committee-reports"
+RS_REPORTS_API_LEGACY = f"{BASE_URL}/api_rs/committee/committee-reports"  # stale since ~mid-2026, kept for reference
 
 # Lok Sabha number (configurable via env or CLI)
 CURRENT_LOK_SABHA = int(os.getenv("LOK_SABHA_NUMBER", "18"))

@@ -121,13 +121,13 @@ def _fetch_rs_committee_reports(committee_key, lok_sabha):
         try:
             resp = requests.get(RS_REPORTS_API, params=params, headers=_RS_HEADERS, timeout=30)
             resp.raise_for_status()
-            data = resp.json()
+            payload = resp.json().get("data", {})
         except Exception as e:
             print(f"  Error fetching {committee['name']}: {e}")
             break
-        records = data.get("records", [])
+        records = payload.get("records", [])
         all_records.extend(records)
-        total = data.get("_metadata", {}).get("totalElements", 0)
+        total = payload.get("_metadata", {}).get("totalElements", 0)
         if len(all_records) >= total or not records:
             break
         page += 1

@@ -4,7 +4,7 @@
 <title>ParliamentWatch — New Committee Reports</title>
 <link>https://parliamentcommittee.streamlit.app/</link>
 <description>New Indian Parliamentary Committee reports as they&#x27;re published, tracked across all 24 Departmentally Related Standing Committees.</description>
-<lastBuildDate>Tue, 08 Sep 2026 04:38:30 +0000</lastBuildDate>
+<lastBuildDate>Tue, 08 Sep 2026 08:13:25 +0000</lastBuildDate>
 <item>
 <title>Agriculture, Animal Husbandry and Food Processing: Forty Sixth Report on Action Taken by the Government on the Observations/Recommendations contained in the Thirty Fourth Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2025-26) on the Subject &#x27;Research for Developing Water Efficient Variety of Seeds to Save Ground Water&#x27; pertaining to the Ministry Agriculture and Farmers Welfare (Department of Agcultural Research and Education)</title>
 <link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_46.pdf?source=app</link>
@@ -111,6 +111,13 @@
 <description>Report No. 25 — Twenty-Fifth Report on ‘Review of the functioning of the National Scheduled Castes Finance and Development Corporation (NSFDC)’ pertaining to the Ministry of Social Justice and Empowerment.</description>
 </item>
 <item>
+<title>Transport, Tourism and Culture: From Manuscript to Mission: Preserving, Mapping and Sustaining India’s Cultural Heritage in the Age of Artificial Intelligence</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_12_committee_3381_787_6a7c4524104b5.pdf</link>
+<guid isPermaLink="false">transport-18-393</guid>
+<pubDate>Wed, 12 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 393 — From Manuscript to Mission: Preserving, Mapping and Sustaining India’s Cultural Heritage in the Age of Artificial Intelligence</description>
+</item>
+<item>
 <title>Rural Development and Panchayati Raj: Implementation of Digital India Land Records Modernization Programme (DILRMP)</title>
 <link>https://sansad.in/getFile/app/lsscommittee/Rural%20Development%20and%20Panchayati%20Raj/18_Rural_Development_and_Panchayati_Raj_41.pdf?source=app</link>
 <guid isPermaLink="false">rural_development-18-41</guid>
@@ -151,6 +158,13 @@
 <guid isPermaLink="false">housing-18-12</guid>
 <pubDate>Tue, 11 Aug 2026 00:00:00 +0000</pubDate>
 <description>Report No. 12 — Twelfth Action Taken Report on Action Taken by the Government on the recommendations contained in the Ninth Report (Eighteenth Lok Sabha) of the Standing Committee on Housing and Urban Affairs (2025-26) on ‘Demands for Grants (2026-27)’ of the Ministry of Housing and Urban Affairs.</description>
+</item>
+<item>
+<title>Transport, Tourism and Culture: Enabling Inclusive, Digital and Sustainable Bus Transport: Policy, Regulation and Public-Private Partnership for Next-Gen Mobility</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_11_committee_3378_776_6a7b3a55c5da4.pdf</link>
+<guid isPermaLink="false">transport-18-392</guid>
+<pubDate>Tue, 11 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 392 — Enabling Inclusive, Digital and Sustainable Bus Transport: Policy, Regulation and Public-Private Partnership for Next-Gen Mobility</description>
 </item>
 <item>
 <title>Finance: Report on Action taken by the Government on the Observations/Recommendations contained in the Thirty-Fifth Report of the Standing Committee on Finance on ‘Demands for Grants (2026-27)’ of the Ministry of Statistics and Programme Implementation</title>
@@ -279,6 +293,90 @@
 <description>Report No. 24 — Twenty-Fourth Report (18th Lok Sabha) of the Standing Committee on Defence on Action Taken by the Government on the Observations/Recommendations contained in the Nineteenth Report (18th Lok Sabha) on Demands for Grants of the Ministry of Defence for the year 2026-27 on ‘General Defence Budget, Border Roads Organisation, Indian Coast Guard, Defence Estates Organisation, Welfare of Ex-Servicemen and Defence Research and Development Organisation (Demand Nos. 19, 20 and 21)’</description>
 </item>
 <item>
+<title>Personnel, Public Grievances, Law and Justice: REVIEW OF FUNCTIONING OF TRIBUNAL SYSTEM IN THE COUNTRY</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3375_803_6a75d37da1f90.pdf</link>
+<guid isPermaLink="false">personnel-18-166</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 166 — REVIEW OF FUNCTIONING OF TRIBUNAL SYSTEM IN THE COUNTRY</description>
+</item>
+<item>
+<title>Personnel, Public Grievances, Law and Justice: CREATION AND DEVELOPMENT OF INSTITUTIONAL MECHANISM TO SUPPORT THE ALTERNATIVE DISPUTE RESOLUTION ECOSYSTEM</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3372_803_6a75d28b5c576.pdf</link>
+<guid isPermaLink="false">personnel-18-165</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 165 — CREATION AND DEVELOPMENT OF INSTITUTIONAL MECHANISM TO SUPPORT THE ALTERNATIVE DISPUTE RESOLUTION ECOSYSTEM</description>
+</item>
+<item>
+<title>Health and Family Welfare: PREVALENCE OF CHRONIC KIDNEY DISEASE IN INDIA - PREVENTION, DIAGNOSIS, TREATMENT AND MANAGEMENT</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3360_3978_6a75bc6209cd2.pdf</link>
+<guid isPermaLink="false">health-18-177</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 177 — PREVALENCE OF CHRONIC KIDNEY DISEASE IN INDIA - PREVENTION, DIAGNOSIS, TREATMENT AND MANAGEMENT</description>
+</item>
+<item>
+<title>Health and Family Welfare: AFFORDABILITY AND ACCESSIBILITY OF HEALTHCARE FACILITIES IN PUBLIC AND PRIVATE SECTOR</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3357_827_6a75ba41abac3.pdf</link>
+<guid isPermaLink="false">health-18-176</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 176 — AFFORDABILITY AND ACCESSIBILITY OF HEALTHCARE FACILITIES IN PUBLIC AND PRIVATE SECTOR</description>
+</item>
+<item>
+<title>Health and Family Welfare: A STUDY OF VECTOR-BORNE DISEASES IN NORTH-EAST INDIA”</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3369_827_6a75ca152e61f.pdf</link>
+<guid isPermaLink="false">health-18-175</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 175 — A STUDY OF VECTOR-BORNE DISEASES IN NORTH-EAST INDIA”</description>
+</item>
+<item>
+<title>Home Affairs: DISASTER MANAGEMENT</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_21_committee_3339_976_6a881941b462a.pdf</link>
+<guid isPermaLink="false">home_affairs-18-261</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 261 — DISASTER MANAGEMENT</description>
+</item>
+<item>
+<title>Home Affairs: REVIEW OF ADMINISTRATIVE GOVERNANCE, SOCIO-ECONOMIC DEVELOPMENT AND INTERNAL SECURITY IN THE UT OF JAMMU &amp; KASHMIR; AND BORDER SECURITY MANAGEMENT AND PREPAREDNESS IN THE UT OF LADAKH</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_21_committee_3336_976_6a8818b3a7f3c.pdf</link>
+<guid isPermaLink="false">home_affairs-18-260</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 260 — REVIEW OF ADMINISTRATIVE GOVERNANCE, SOCIO-ECONOMIC DEVELOPMENT AND INTERNAL SECURITY IN THE UT OF JAMMU &amp; KASHMIR; AND BORDER SECURITY MANAGEMENT AND PREPAREDNESS IN THE UT OF LADAKH</description>
+</item>
+<item>
+<title>Home Affairs: ACTION TAKEN BY GOVERNMENT ON THE RECOMMENDATIONS/OBSERVATIONS CONTAINED IN THE TWO HUNDRED FIFTY FOURTH REPORT OF THE COMMITTEE ON CYBER CRIME RAMIFICATIONS, PROTECTION AND PREVENTION</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_07_committee_3333_976_6a75a1f0b00a7.pdf</link>
+<guid isPermaLink="false">home_affairs-18-259</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 259 — ACTION TAKEN BY GOVERNMENT ON THE RECOMMENDATIONS/OBSERVATIONS CONTAINED IN THE TWO HUNDRED FIFTY FOURTH REPORT OF THE COMMITTEE ON CYBER CRIME RAMIFICATIONS, PROTECTION AND PREVENTION</description>
+</item>
+<item>
+<title>Science and Technology, Environment, Forests and Climate Change: Action Taken by the Government on the recommendations/observations contained in the 404th Report on ‘Review of the functioning of Tata Memorial Centre (TMC),Bhabha Atomic Research Centre (BARC) and Nuclear Power Corporation of India Limited (NPCIL)</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_09_02_committee_3351_910_6a97f7b28ca31.pdf</link>
+<guid isPermaLink="false">science-18-415</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 415 — Action Taken by the Government on the recommendations/observations contained in the 404th Report on ‘Review of the functioning of Tata Memorial Centre (TMC),Bhabha Atomic Research Centre (BARC) and Nuclear Power Corporation of India Limited (NPCIL)</description>
+</item>
+<item>
+<title>Science and Technology, Environment, Forests and Climate Change: Action Taken by the Government on the recommendations/observations contained in the 403rd Report on ‘Review of the Functioning of CSIR-Central Scientific Instruments Organisation (CSIR-CSIO) and CSIR-Institute of Genomics &amp; Integrative Biology (CSIR-IGIB)</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_09_02_committee_3348_910_6a97f70c5448c.pdf</link>
+<guid isPermaLink="false">science-18-414</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 414 — Action Taken by the Government on the recommendations/observations contained in the 403rd Report on ‘Review of the Functioning of CSIR-Central Scientific Instruments Organisation (CSIR-CSIO) and CSIR-Institute of Genomics &amp; Integrative Biology (CSIR-IGIB)</description>
+</item>
+<item>
+<title>Science and Technology, Environment, Forests and Climate Change: Action Taken by the Government on the recommendations/observations contained in the 402nd Report on Water Pollution in Delhi NCR and steps taken by various agencies for its mitigation</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_09_02_committee_3345_910_6a97cc69c543e.pdf</link>
+<guid isPermaLink="false">science-18-413</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 413 — Action Taken by the Government on the recommendations/observations contained in the 402nd Report on Water Pollution in Delhi NCR and steps taken by various agencies for its mitigation</description>
+</item>
+<item>
+<title>Science and Technology, Environment, Forests and Climate Change: Forest Fires in the Himalayan Region, its adverse effects and mitigation measures</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_09_02_committee_3342_910_6a97c622e8747.pdf</link>
+<guid isPermaLink="false">science-18-412</guid>
+<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 412 — Forest Fires in the Himalayan Region, its adverse effects and mitigation measures</description>
+</item>
+<item>
 <title>Chemicals &amp; Fertilizers: Thirty-Fourth Report on Action Taken by the Government on the Observations/Recommendations contained in the Twenty-third Report of the Standing Committee on Chemicals and Fertilizers (Eighteenth Lok Sabha) on ‘Demands for Grants 2026-27’ pertaining to the Ministry of Chemicals and Fertilizers, Department of Pharmaceuticals. </title>
 <link>https://sansad.in/getFile/app/lsscommittee/Chemicals%20&amp;%20Fertilizers/18_Chemicals_And_Fertilizers_34.pdf?source=app</link>
 <guid isPermaLink="false">chemicals-18-34</guid>
@@ -382,6 +480,20 @@
 <guid isPermaLink="false">communications-18-28</guid>
 <pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
 <description>Report No. 28 — Twenty- eighth Report on Action Taken by the Government on the Observations/Recommendations of the Committee contained in their Twenty- second Report (18th Lok Sabha) on “Review of mechanism to curb Fake News” relating to the Ministry of Information and Broadcasting</description>
+</item>
+<item>
+<title>Industry: Action taken by the Government on the recommendations / observations contained in the 333rd Report of the Committee on Demands for Grants (2026-27) pertaining to the Ministry of Micro, Small and Medium Enterprises</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_13_committee_3387_944_6a7d56b30aef9.pdf</link>
+<guid isPermaLink="false">industry-18-335</guid>
+<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 335 — Action taken by the Government on the recommendations / observations contained in the 333rd Report of the Committee on Demands for Grants (2026-27) pertaining to the Ministry of Micro, Small and Medium Enterprises</description>
+</item>
+<item>
+<title>Industry: Action taken by the Government on the recommendations / observations contained in the 332nd Report of the Committee on Demands for Grants (2026-27) pertaining to the Ministry of Heavy Industries</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_08_13_committee_3384_944_6a7d4fb286456.pdf</link>
+<guid isPermaLink="false">industry-18-334</guid>
+<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+<description>Report No. 334 — Action taken by the Government on the recommendations / observations contained in the 332nd Report of the Committee on Demands for Grants (2026-27) pertaining to the Ministry of Heavy Industries</description>
 </item>
 <item>
 <title>Coal, Mines and Steel: Action Taken by the Government on the Observations/Recommendations contained in the Twentieth Report (Eighteenth Lok Sabha) of the Standing Committee on Coal, Mines and Steel on Demands for Grants (2025-26) of the Ministry of Steel.</title>
@@ -531,22 +643,29 @@
 <description>Report No. 24 — Twenty-Fourth Report on ‘Aatmanirbharta in Steel Sector and Roadmap for ‘Made in India’ Steel Production&#x27;&#x27; pertaining to the Ministry of Steel</description>
 </item>
 <item>
+<title>Subordinate Legislation: TWO HUNDRED AND FIFTY SEVENTH REPORT ON (i) The Competition Commission of India ( Commitment) Regulations, 2024, (ii) The Competition Committee Of India (Settlement) Regulations, 2024 (iii) The Competition Commission of India ( Determination of Turnover or Income) Regulations, 2024 and (iv) The Competition Commission of India ( Determination of Monetary Penalty) Guidelines, 2024</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/uploads/committee/2026_07_21_committee_3310_921_6a5f2f6daef45.pdf</link>
+<guid isPermaLink="false">commerce-18-257</guid>
+<pubDate>Tue, 21 Jul 2026 00:00:00 +0000</pubDate>
+<description>Report No. 257 — TWO HUNDRED AND FIFTY SEVENTH REPORT ON (i) The Competition Commission of India ( Commitment) Regulations, 2024, (ii) The Competition Committee Of India (Settlement) Regulations, 2024 (iii) The Competition Commission of India ( Determination of Turnover or Income) Regulations, 2024 and (iv) The Competition Commission of India ( Determination of Monetary Penalty) Guidelines, 2024</description>
+</item>
+<item>
 <title>Education, Women, Children, Youth and Sports: 381st Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Fourth Report on Demands for Grants (2025-26) of the Department of Higher Education, Ministry of Education</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/16/214/381_2026_7_18.pdf?source=rajyasabha</link>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/committee_file/ReportFile/16/214/381_2026_7_18.pdf</link>
 <guid isPermaLink="false">education-18-381</guid>
 <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
 <description>Report No. 381 — 381st Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Fourth Report on Demands for Grants (2025-26) of the Department of Higher Education, Ministry of Education</description>
 </item>
 <item>
-<title>Education, Women, Children, Youth and Sports: 380th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Eighth Report on Review of functioning of National Council for Teacher Education (NCTE) and initiatives taken to support training of teachers in light of NEP 2020&amp;#39;s thrust on Capacity Building of Teachers</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/16/214/380_2026_6_17.pdf?source=rajyasabha</link>
+<title>Education, Women, Children, Youth and Sports: 380th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Eighth Report on Review of functioning of National Council for Teacher Education (NCTE) and initiatives taken to support training of teachers in light of NEP 2020&amp;amp;amp;amp;#39;s thrust on Capacity Building of Teachers</title>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/committee_file/ReportFile/16/214/380_2026_6_17.pdf</link>
 <guid isPermaLink="false">education-18-380</guid>
 <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
-<description>Report No. 380 — 380th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Eighth Report on Review of functioning of National Council for Teacher Education (NCTE) and initiatives taken to support training of teachers in light of NEP 2020&amp;#39;s thrust on Capacity Building of Teachers</description>
+<description>Report No. 380 — 380th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Eighth Report on Review of functioning of National Council for Teacher Education (NCTE) and initiatives taken to support training of teachers in light of NEP 2020&amp;amp;amp;amp;#39;s thrust on Capacity Building of Teachers</description>
 </item>
 <item>
 <title>Education, Women, Children, Youth and Sports: 379th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Fifth Report on Demands for Grants 2025-26 of Ministry of Women and Child Development</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/16/214/379_2026_6_17.pdf?source=rajyasabha</link>
+<link>https://bucketapi.rajyasabha.digital/public-bucket/committee_file/ReportFile/16/214/379_2026_6_17.pdf</link>
 <guid isPermaLink="false">education-18-379</guid>
 <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
 <description>Report No. 379 — 379th Report on Action Taken by the Government on the Recommendations/Observations contained in the Three Hundred and Sixty Fifth Report on Demands for Grants 2025-26 of Ministry of Women and Child Development</description>
@@ -591,125 +710,6 @@ on Demands for Grants (2025-26)</title>
 contained in the Twelfth Report (Eighteenth Lok Sabha) of the Standing 
 Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) 
 on Demands for Grants (2025-26)</description>
-</item>
-<item>
-<title>Agriculture, Animal Husbandry and Food Processing: Thirty-Seventh Report on Action taken by the Government on the Observations/Recommendations contained in the Eleventh Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Fisheries, Animal Husbandry and Dairying (Department of Animal Husbandry and Dairying). </title>
-<link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_37.pdf?source=app</link>
-<guid isPermaLink="false">agriculture-18-37</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 37 — Thirty-Seventh Report on Action taken by the Government on the Observations/Recommendations contained in the Eleventh Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Fisheries, Animal Husbandry and Dairying (Department of Animal Husbandry and Dairying). </description>
-</item>
-<item>
-<title>Agriculture, Animal Husbandry and Food Processing: Thirty-Sixth Report on Action taken by the Government on the Observations/Recommendations contained in the Ninth Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Cooperation. </title>
-<link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_36.pdf?source=app</link>
-<guid isPermaLink="false">agriculture-18-36</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 36 — Thirty-Sixth Report on Action taken by the Government on the Observations/Recommendations contained in the Ninth Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Cooperation. </description>
-</item>
-<item>
-<title>Agriculture, Animal Husbandry and Food Processing: Thirty-Fifth Report on Action taken by the Government on the Observations/Recommendations contained in the Seventh Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Agriculture &amp; Farmers Welfare (Department of Agriculture and Farmers Welfare). </title>
-<link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_35.pdf?source=app</link>
-<guid isPermaLink="false">agriculture-18-35</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 35 — Thirty-Fifth Report on Action taken by the Government on the Observations/Recommendations contained in the Seventh Report (Eighteenth Lok Sabha) of the Standing Committee on Agriculture, Animal Husbandry and Food Processing (2024-25) on &#x27;Demands for Grants (2025-26)&#x27; pertaining to the Ministry of Agriculture &amp; Farmers Welfare (Department of Agriculture and Farmers Welfare). </description>
-</item>
-<item>
-<title>Agriculture, Animal Husbandry and Food Processing: Thirty-Fourth Report on the Subject ‘Research for Developing Water Efficient Variety of Seeds to Save Ground Water’ pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agricultural Research and Education).</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_34.pdf?source=app</link>
-<guid isPermaLink="false">agriculture-18-34</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 34 — Thirty-Fourth Report on the Subject ‘Research for Developing Water Efficient Variety of Seeds to Save Ground Water’ pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agricultural Research and Education).</description>
-</item>
-<item>
-<title>Agriculture, Animal Husbandry and Food Processing: Thirty-Third Report on the subject “Production and Availability of Oilseeds and Pulses in the Country” pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agriculture and Farmers Welfare).</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Agriculture,%20Animal%20Husbandry%20and%20Food%20Processing/18_Agriculture_Animal_Husbandry_and_Food_Processing_33.pdf?source=app</link>
-<guid isPermaLink="false">agriculture-18-33</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 33 — Thirty-Third Report on the subject “Production and Availability of Oilseeds and Pulses in the Country” pertaining to the Ministry of Agriculture and Farmers Welfare (Department of Agriculture and Farmers Welfare).</description>
-</item>
-<item>
-<title>Coal, Mines and Steel: Action Taken by the Government on the Observations/Recommendations contained in the Eighth Report (Eighteenth Lok Sabha) of the Standing Committee on Coal, Mines and Steel on the subject  Steel Scrap Recycling Policy of the Ministry of Steel</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Coal,%20Mines%20and%20Steel/18_Coal_Mines_and_Steel_22.pdf?source=app</link>
-<guid isPermaLink="false">coal-18-22</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 22 — Action Taken by the Government on the Observations/Recommendations contained in the Eighth Report (Eighteenth Lok Sabha) of the Standing Committee on Coal, Mines and Steel on the subject  Steel Scrap Recycling Policy of the Ministry of Steel</description>
-</item>
-<item>
-<title>Coal, Mines and Steel: Twenty-first Report on ‘Organisational Structure and Performance of Steel Authority of India Limited (SAIL)- A Review’  pertaining to Ministry of Steel</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Coal,%20Mines%20and%20Steel/18_Coal_Mines_and_Steel_21.pdf?source=app</link>
-<guid isPermaLink="false">coal-18-21</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 21 — Twenty-first Report on ‘Organisational Structure and Performance of Steel Authority of India Limited (SAIL)- A Review’  pertaining to Ministry of Steel</description>
-</item>
-<item>
-<title>Labour, Textiles and Skill Development: Action taken by the Government on the Observations/Recommendations of the Committee contained in their Sixth Report (Eighteenth Lok Sabha) on ‘Demands for Grants (2025-26)’ of the Ministry of Skill Development and Entrepreneurship.</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Labour,%20Textiles%20and%20Skill%20Development/18_Labour_Textiles_and_Skill_Development_20.pdf?source=app</link>
-<guid isPermaLink="false">labour-18-20</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 20 — Action taken by the Government on the Observations/Recommendations of the Committee contained in their Sixth Report (Eighteenth Lok Sabha) on ‘Demands for Grants (2025-26)’ of the Ministry of Skill Development and Entrepreneurship.</description>
-</item>
-<item>
-<title>Labour, Textiles and Skill Development: Action Taken by the Government on the observations/recommendations of the Committee contained in their Fifth Report (Eighteenth Lok Sabha) on ‘Demand for Grants (2025-26)’ of the Ministry of Textiles.</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Labour,%20Textiles%20and%20Skill%20Development/18_Labour_Textiles_and_Skill_Development_19.pdf?source=app</link>
-<guid isPermaLink="false">labour-18-19</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 19 — Action Taken by the Government on the observations/recommendations of the Committee contained in their Fifth Report (Eighteenth Lok Sabha) on ‘Demand for Grants (2025-26)’ of the Ministry of Textiles.</description>
-</item>
-<item>
-<title>Labour, Textiles and Skill Development: Action Taken by the Government on the Observations/ Recommendations of the Committee contained in their Fourth Report (Eighteenth Lok Sabha) on ‘Demands for Grants (2025-26)’ of the Ministry of Labour &amp; Employment.</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Labour,%20Textiles%20and%20Skill%20Development/18_Labour_Textiles_and_Skill_Development_18.pdf?source=app</link>
-<guid isPermaLink="false">labour-18-18</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 18 — Action Taken by the Government on the Observations/ Recommendations of the Committee contained in their Fourth Report (Eighteenth Lok Sabha) on ‘Demands for Grants (2025-26)’ of the Ministry of Labour &amp; Employment.</description>
-</item>
-<item>
-<title>Rural Development and Panchayati Raj: Action taken on the recommendations contained in the Fifteenth Report (Eighteenth Lok Sabha) on &#x27;&#x27;Devolution of Funds under Panchayati Raj System’ (2024-25) of the Ministry of Panchayati Raj&#x27;&#x27;</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Rural%20Development%20and%20Panchayati%20Raj/18_Rural_Development_and_Panchayati_Raj_30.pdf?source=app</link>
-<guid isPermaLink="false">rural_development-18-30</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 30 — Action taken on the recommendations contained in the Fifteenth Report (Eighteenth Lok Sabha) on &#x27;&#x27;Devolution of Funds under Panchayati Raj System’ (2024-25) of the Ministry of Panchayati Raj&#x27;&#x27;</description>
-</item>
-<item>
-<title>Rural Development and Panchayati Raj: Action taken on the recommendations contained in the Twenty-First Report (Eighteenth Lok Sabha) on &#x27;&#x27;Gram Urja Swaraj: Promoting Renewable Energy in Rural Areas’ (2024-25) of the Ministry of Panchayati Raj&#x27;&#x27;</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Rural%20Development%20and%20Panchayati%20Raj/18_Rural_Development_and_Panchayati_Raj_29.pdf?source=app</link>
-<guid isPermaLink="false">rural_development-18-29</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 29 — Action taken on the recommendations contained in the Twenty-First Report (Eighteenth Lok Sabha) on &#x27;&#x27;Gram Urja Swaraj: Promoting Renewable Energy in Rural Areas’ (2024-25) of the Ministry of Panchayati Raj&#x27;&#x27;</description>
-</item>
-<item>
-<title>Rural Development and Panchayati Raj: Action taken on the recommendations contained in the Eighth Report (Eighteenth Lok Sabha) on “Rural Employment through Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)” (2024-25) of the Ministry of Rural Development (Department of Rural Development)</title>
-<link>https://sansad.in/getFile/app/lsscommittee/Rural%20Development%20and%20Panchayati%20Raj/18_Rural_Development_and_Panchayati_Raj_28.pdf?source=app</link>
-<guid isPermaLink="false">rural_development-18-28</guid>
-<pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 28 — Action taken on the recommendations contained in the Eighth Report (Eighteenth Lok Sabha) on “Rural Employment through Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)” (2024-25) of the Ministry of Rural Development (Department of Rural Development)</description>
-</item>
-<item>
-<title>Education, Women, Children, Youth and Sports: 377th Report on Demands for Grants 2026-27 pertaining to the Ministry of Women and Child Development</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/16/214/377_2026_6_16.pdf?source=rajyasabha</link>
-<guid isPermaLink="false">education-18-377</guid>
-<pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 377 — 377th Report on Demands for Grants 2026-27 pertaining to the Ministry of Women and Child Development</description>
-</item>
-<item>
-<title>Education, Women, Children, Youth and Sports: 376th Report on Demands for Grants 2026-27 pertaining to the Department of School Education and Literacy, Ministry of Education</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/16/214/376_2026_3_12.pdf?source=rajyasabha</link>
-<guid isPermaLink="false">education-18-376</guid>
-<pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 376 — 376th Report on Demands for Grants 2026-27 pertaining to the Department of School Education and Literacy, Ministry of Education</description>
-</item>
-<item>
-<title>Transport, Tourism and Culture: Demands for Grants (2026-27) of Ministry of Tourism</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/20/218/391_2026_3_16.pdf?source=rajyasabha</link>
-<guid isPermaLink="false">transport-18-391</guid>
-<pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 391 — Demands for Grants (2026-27) of Ministry of Tourism</description>
-</item>
-<item>
-<title>Transport, Tourism and Culture: Demands for Grants (2026-27) of the Ministry of  Road Transport and Highways</title>
-<link>https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/20/218/390_2026_3_16.pdf?source=rajyasabha</link>
-<guid isPermaLink="false">transport-18-390</guid>
-<pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-<description>Report No. 390 — Demands for Grants (2026-27) of the Ministry of  Road Transport and Highways</description>
 </item>
 </channel>
 </rss>
