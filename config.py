@@ -161,6 +161,31 @@ DRSC_COMMITTEES = {
         "mst_comm_id": 20,
         "house": "R",
     },
+    # --- Financial Committees (3) ---
+    # Not departmentally related -- these are Parliament's three standing
+    # financial committees, with mixed LS+RS membership but administered
+    # solely by the Lok Sabha Secretariat (single committee each, no RS
+    # equivalent: /rs/committee/financial-committees is 404). They use the
+    # same api_ls endpoint and schema as the LS-chaired DRSCs above, found
+    # via https://sansad.in/ls/committee/financial-committees.
+    "public_accounts": {
+        "name": "Public Accounts",
+        "api_code": 26,
+        "house": "L",
+        "category": "financial",
+    },
+    "estimates": {
+        "name": "Estimates",
+        "api_code": 10,
+        "house": "L",
+        "category": "financial",
+    },
+    "public_undertakings": {
+        "name": "Public Undertakings",
+        "api_code": 27,
+        "house": "L",
+        "category": "financial",
+    },
 }
 
 # LLM settings — defaults to Anthropic for backward compatibility

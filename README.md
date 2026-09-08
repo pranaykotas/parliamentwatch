@@ -15,7 +15,7 @@ ParliamentWatch pulls reports from [sansad.in](https://sansad.in) (the official 
 
 ## Why This Exists
 
-In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are the most robust institutional mechanism through which the legislature exercises control over the executive. There are **24 DRSCs** — 16 chaired by Lok Sabha members and 8 chaired by Rajya Sabha members — each shadowing a cluster of central government ministries. Together, they cover every arm of the Union Government.
+In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are the most robust institutional mechanism through which the legislature exercises control over the executive. There are **24 DRSCs** — 16 chaired by Lok Sabha members and 8 chaired by Rajya Sabha members — each shadowing a cluster of central government ministries. Together, they cover every arm of the Union Government. ParliamentWatch also tracks Parliament's three **Financial Committees** — Public Accounts, Estimates, and Public Undertakings — which scrutinise government spending and CAG audit findings across every ministry rather than one.
 
 These committees examine:
 - **Demands for Grants** — scrutinising how each ministry proposes to spend public money

@@ -620,7 +620,7 @@ if not has_data():
         '<h2>Welcome to ParliamentWatch</h2>'
         '<p style="font-size: 1.1em; color: rgba(23, 20, 19, 0.70);">Track, search, and summarize Indian Parliamentary Committee reports</p>'
         '<p style="color: rgba(23, 20, 19, 0.50);">To get started, click <strong>Fetch All Committees</strong> in the sidebar.<br>'
-        'This will download report listings for all 16 DRSCs from sansad.in.</p>'
+        'This will download report listings for all 24 DRSCs and 3 Financial Committees from sansad.in.</p>'
         '<p style="font-size: 0.85em; color: rgba(23, 20, 19, 0.50); margin-top: 1.5em;">'
         'No API key needed for browsing and searching. Add one in the sidebar for AI summaries.<br>'
         'For persistent summaries and full control, '
@@ -1304,13 +1304,17 @@ with tab_why:
 
 In India's parliamentary democracy, **Departmentally Related Standing Committees (DRSCs)** are
 the most robust institutional mechanism through which the legislature exercises control over the
-executive. There are **16 DRSCs**, each shadowing a cluster of central government ministries.
-Together, they cover every arm of the Union Government.
+executive. There are **24 DRSCs** — 16 chaired by Lok Sabha members, 8 by Rajya Sabha members —
+each shadowing a cluster of central government ministries, together covering every arm of the
+Union Government. ParliamentWatch also tracks Parliament's three standing **Financial
+Committees** — Public Accounts, Estimates, and Public Undertakings — which scrutinise government
+spending and CAG audit findings across every ministry, not just one.
 
 These committees examine:
 - **Demands for Grants** — scrutinising how each ministry proposes to spend public money
 - **Bills** referred to them by Parliament — providing detailed clause-by-clause analysis
 - **Policy subjects** — investigating issues of national importance on their own initiative
+- **CAG audit findings and PSU performance** — the Financial Committees' specific remit
 
 Their reports are non-partisan, evidence-based documents that draw on testimonies from
 government officials, domain experts, and field visits. Unlike floor debates, committee
@@ -1324,7 +1328,7 @@ what a 200-page PDF says. ParliamentWatch aims to change that.
 
 ### What Makes This Tool Different
 
-- **Unified access** to all 16 DRSCs across both Lok Sabha and Rajya Sabha, with historical data going back multiple Lok Sabhas
+- **Unified access** to all 24 DRSCs across both Lok Sabha and Rajya Sabha, plus the 3 Financial Committees, with historical data going back multiple Lok Sabhas
 - **Full-text search** across extracted report PDFs — not just titles
 - **AI-powered summaries** using your own API key (Bring Your Own Key) — choose from free providers like Ollama, Gemini, or Groq, or paid ones like Claude and GPT
 - **Daily email alerts** when new reports are published, via GitHub Actions
