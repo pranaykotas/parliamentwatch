@@ -16,6 +16,7 @@ from scraper import (
 from pdf_utils import get_report_text
 from summarizer import summarize_report
 from committee_members import load_committee_members, fetch_all_committee_members
+from atr import atr_export_fields, build_atr_links, format_report_ref, get_atr_link
 
 # --- Page config ---
 st.set_page_config(
@@ -786,6 +787,8 @@ with tab_committee:
             dive_ls_filter = "All"
     selected_key = committee_options[selected_name]
     reports = all_reports[selected_key]
+    # Built from every report in the committee, so links survive the Lok Sabha filter.
+    atr_links = build_atr_links({selected_key: reports})
     if dive_ls_filter != "All":
         reports = [r for r in reports if r.get("lok_sabha") == dive_ls_filter]
 
@@ -892,6 +895,20 @@ with tab_committee:
 
             with st.expander(header):
                 st.write(r.get("title", "No title"))
+
+                atr_link = get_atr_link(atr_links, r)
+                responds_to = atr_link["responds_to"]
+                if responds_to:
+                    target = format_report_ref(responds_to["report_number"], responds_to["lok_sabha"], r.get("lok_sabha"))
+                    if not responds_to["in_data"]:
+                        target += ", not in this dataset"
+                    st.caption(f"Responds to Report #{target}")
+                if atr_link["action_taken_reports"]:
+                    atr_refs = ", ".join(
+                        "#" + format_report_ref(a["report_number"], a["lok_sabha"], r.get("lok_sabha"))
+                        for a in atr_link["action_taken_reports"]
+                    )
+                    st.caption(f"Action taken: Report {atr_refs}")
 
                 col_a, col_b = st.columns(2)
                 with col_a:
@@ -1141,9 +1158,10 @@ with tab_export:
         export_keys = [next(k for k, v in DRSC_COMMITTEES.items() if v["name"] == export_committee_filter)]
 
     if export_type == "Report metadata":
+        atr_links = build_atr_links(all_reports)
         flat = []
         for k in export_keys:
-            flat.extend(all_reports.get(k, []))
+            flat.extend({**r, **atr_export_fields(r, atr_links)} for r in all_reports.get(k, []))
 
         if not flat:
             st.warning("No reports found.")
@@ -1154,6 +1172,7 @@ with tab_export:
             display_cols = [
                 "committee_name", "report_number", "title",
                 "presented_in_ls", "laid_in_rs", "lok_sabha", "house", "pdf_url",
+                "responds_to_report", "responds_to_lok_sabha", "action_taken_reports",
             ]
             available_cols = [c for c in display_cols if c in df.columns]
             df_export = df[available_cols]

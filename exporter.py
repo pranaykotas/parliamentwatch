@@ -4,6 +4,7 @@ import csv
 import os
 from scraper import load_existing_reports
 from config import DATA_DIR
+from atr import atr_export_fields, build_atr_links
 
 
 def export_csv(committee_key=None, output_path=None):
@@ -24,6 +25,7 @@ def export_csv(committee_key=None, output_path=None):
 
     rows = []
     committees = [committee_key] if committee_key else reports.keys()
+    atr_links = build_atr_links(reports)
 
     for key in committees:
         for r in reports.get(key, []):
@@ -39,6 +41,7 @@ def export_csv(committee_key=None, output_path=None):
                 "laid_in_rs": r.get("laid_in_rs", ""),
                 "lok_sabha": r.get("lok_sabha", ""),
                 "pdf_url": safe_pdf_url,
+                **atr_export_fields(r, atr_links),
             })
 
     if not rows:
@@ -46,7 +49,8 @@ def export_csv(committee_key=None, output_path=None):
         return
 
     fieldnames = ["committee", "committee_name", "report_number", "title",
-                  "presented_in_ls", "laid_in_rs", "lok_sabha", "pdf_url"]
+                  "presented_in_ls", "laid_in_rs", "lok_sabha", "pdf_url",
+                  "responds_to_report", "responds_to_lok_sabha", "action_taken_reports"]
 
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
