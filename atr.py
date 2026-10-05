@@ -66,6 +66,9 @@ def _ordinal_to_int(text):
     total = 0
     for word in re.findall(_WORD, text.lower()):
         if word.startswith("hundred"):
+            # A second "hundred" is a typo ("Two Hundred Two Hundred and ..."), not a number.
+            if total >= 100:
+                return None
             total = (total or 1) * 100
         elif word != "and":
             total += _UNITS[word]
@@ -110,7 +113,8 @@ def build_atr_links(reports):
     which is None for reports that aren't ATRs and otherwise
     {"report_number", "lok_sabha", "in_data"}, and "action_taken_reports", a list
     of {"report_number", "lok_sabha"}. Links stay within one committee. An LS link
-    must also match the Lok Sabha, taken from the title or else from the ATR.
+    must also match the Lok Sabha, taken from the title or else from the ATR. If
+    neither can apply, the link's "lok_sabha" is None and "in_data" is False.
     """
     links = {}
     for committee, records in reports.items():
@@ -122,9 +126,15 @@ def build_atr_links(reports):
             if not ref:
                 continue
             is_rs = r.get("house") == "R"
-            lok_sabha = None if is_rs else (ref["lok_sabha"] or r.get("lok_sabha"))
+            lok_sabha = None if is_rs else ref["lok_sabha"]
+            # A title that names no Lok Sabha means the ATR's own, unless it cites a number at
+            # or above the ATR's: LS numbers restart each Lok Sabha, so that report is from an
+            # earlier one, which is unknown.
+            same_lok_sabha_possible = ref["report_number"] < (r.get("report_number") or 0)
+            if not is_rs and lok_sabha is None and same_lok_sabha_possible:
+                lok_sabha = r.get("lok_sabha")
             original_key = (committee, lok_sabha, ref["report_number"])
-            in_data = original_key in links
+            in_data = (is_rs or lok_sabha is not None) and original_key in links
             links[_link_key(committee, r)]["responds_to"] = {
                 "report_number": ref["report_number"], "lok_sabha": lok_sabha, "in_data": in_data,
             }

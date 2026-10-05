@@ -96,6 +96,13 @@ def test_returns_none_for_non_atr(title):
     assert parse_atr_reference(title) is None
 
 
+def test_returns_none_for_repeated_hundred():
+    # A typo in the data; reading it would give report 20221.
+    assert parse_atr_reference(
+        "Action Taken by the Government on the Observations/Recommendations of the Committee contained in its "
+        "Two Hundred Two Hundred and Twenty First Report on the Demands for Grants") is None
+
+
 def _report(committee, number, title, house="R", lok_sabha=18):
     return {"committee": committee, "report_number": number, "title": title,
             "house": house, "lok_sabha": lok_sabha}
@@ -139,6 +146,20 @@ def test_ls_atr_on_earlier_lok_sabha_does_not_link_to_same_number():
     links = build_atr_links(reports)
     assert get_atr_link(links, reports["chemicals"][1])["responds_to"] == {"report_number": 50, "lok_sabha": 17, "in_data": False}
     assert get_atr_link(links, reports["chemicals"][0])["action_taken_reports"] == []
+
+
+def test_ls_atr_citing_a_later_number_leaves_lok_sabha_unknown():
+    # LS numbers restart each Lok Sabha, so report 3 can't respond to the same Lok Sabha's report 28.
+    reports = {"external_affairs": [
+        _report("external_affairs", 28, ORIGINAL, house="L"),
+        _report("external_affairs", 3, "Action taken by the Government on the observations/recommendations "
+                                       "contained in the Twenty Eighth Report of the Committee", house="L"),
+    ]}
+    links = build_atr_links(reports)
+    assert get_atr_link(links, reports["external_affairs"][1])["responds_to"] == {
+        "report_number": 28, "lok_sabha": None, "in_data": False}
+    assert get_atr_link(links, reports["external_affairs"][0])["action_taken_reports"] == []
+    assert atr_export_fields(reports["external_affairs"][1], links)["responds_to_lok_sabha"] == ""
 
 
 def test_does_not_link_across_committees():
