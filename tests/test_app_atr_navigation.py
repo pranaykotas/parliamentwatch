@@ -51,3 +51,11 @@ def test_committee_with_duplicate_records_renders():
     # education has duplicate report numbers; each nav button still needs a unique key.
     at = _deep_dive("Education")
     assert not at.exception
+
+
+def test_atr_links_have_arrow_icon():
+    at = _deep_dive("Defence")
+    atr_buttons = [b for b in at.button if (b.key or "").startswith("atr_nav_")]
+    assert atr_buttons
+    assert all(b.proto.icon == ":material/arrow_forward:" for b in atr_buttons)
+
