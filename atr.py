@@ -100,7 +100,7 @@ def parse_atr_reference(title):
 
 
 
-def _link_key(committee, report):
+def report_key(committee, report):
     """LS report numbers restart each Lok Sabha; RS numbers run continuously."""
     lok_sabha = None if report.get("house") == "R" else report.get("lok_sabha")
     return (committee, lok_sabha, report.get("report_number"))
@@ -119,7 +119,7 @@ def build_atr_links(reports):
     links = {}
     for committee, records in reports.items():
         for r in records:
-            links.setdefault(_link_key(committee, r), {"responds_to": None, "action_taken_reports": []})
+            links.setdefault(report_key(committee, r), {"responds_to": None, "action_taken_reports": []})
 
         for r in records:
             ref = parse_atr_reference(r.get("title", ""))
@@ -135,7 +135,7 @@ def build_atr_links(reports):
                 lok_sabha = r.get("lok_sabha")
             original_key = (committee, lok_sabha, ref["report_number"])
             in_data = (is_rs or lok_sabha is not None) and original_key in links
-            links[_link_key(committee, r)]["responds_to"] = {
+            links[report_key(committee, r)]["responds_to"] = {
                 "report_number": ref["report_number"], "lok_sabha": lok_sabha, "in_data": in_data,
             }
             if in_data:
@@ -151,7 +151,7 @@ def build_atr_links(reports):
 
 def get_atr_link(links, report):
     """Return the links for one report, as built by build_atr_links()."""
-    return links.get(_link_key(report.get("committee"), report),
+    return links.get(report_key(report.get("committee"), report),
                      {"responds_to": None, "action_taken_reports": []})
 
 

@@ -16,7 +16,7 @@ from scraper import (
 from pdf_utils import get_report_text
 from summarizer import summarize_report
 from committee_members import load_committee_members, fetch_all_committee_members
-from atr import atr_export_fields, build_atr_links, format_report_ref, get_atr_link
+from atr import atr_export_fields, build_atr_links, format_report_ref, get_atr_link, report_key
 
 # --- Page config ---
 st.set_page_config(
@@ -789,6 +789,7 @@ with tab_committee:
     reports = all_reports[selected_key]
     # Built from every report in the committee, so links survive the Lok Sabha filter.
     atr_links = build_atr_links({selected_key: reports})
+    committee_reports = reports
     if dive_ls_filter != "All":
         reports = [r for r in reports if r.get("lok_sabha") == dive_ls_filter]
 
@@ -874,10 +875,24 @@ with tab_committee:
             filtered = sorted(filtered, key=lambda r: r.get("report_number", 0))
         # "Report # (desc)" is the default storage order, no re-sort needed
 
+        # Clicking an ATR link focuses the Deep Dive on that one report. The focus
+        # ignores the other filters, since the target may be outside them.
+        focus = st.session_state.get("dive_focus_report")
+        if focus and focus[0] == selected_key:
+            filtered = [r for r in committee_reports if report_key(selected_key, r) == focus]
+            st.button("Show all reports", key="dive_clear_focus",
+                      on_click=lambda: st.session_state.pop("dive_focus_report", None))
+        else:
+            st.session_state.pop("dive_focus_report", None)
+            focus = None
+
         st.caption(f"Showing {len(filtered)} of {len(reports)} reports")
 
+        def _focus_on(lok_sabha, report_number):
+            st.session_state["dive_focus_report"] = (selected_key, lok_sabha, report_number)
+
         # Display reports with expandable details
-        for r in filtered:
+        for idx, r in enumerate(filtered):
             date = format_report_date(r)
             category = classify_report(r.get("title", ""))
             house_label = "LS" if r.get("house") == "L" else ("RS" if r.get("house") == "R" else "")
@@ -893,22 +908,24 @@ with tab_committee:
 
             header = f"**#{report_num}** | {category} | {house_label} | {date}{status_str}"
 
-            with st.expander(header):
+            with st.expander(header, expanded=focus is not None):
                 st.write(r.get("title", "No title"))
 
                 atr_link = get_atr_link(atr_links, r)
                 responds_to = atr_link["responds_to"]
                 if responds_to:
                     target = format_report_ref(responds_to["report_number"], responds_to["lok_sabha"], r.get("lok_sabha"))
-                    if not responds_to["in_data"]:
-                        target += ", not in this dataset"
-                    st.caption(f"Responds to Report #{target}")
-                if atr_link["action_taken_reports"]:
-                    atr_refs = ", ".join(
-                        "#" + format_report_ref(a["report_number"], a["lok_sabha"], r.get("lok_sabha"))
-                        for a in atr_link["action_taken_reports"]
-                    )
-                    st.caption(f"Action taken: Report {atr_refs}")
+                    if responds_to["in_data"]:
+                        st.button(f"Responds to Report #{target}", type="tertiary",
+                                  key=f"atr_nav_{idx}_responds", on_click=_focus_on,
+                                  args=(responds_to["lok_sabha"], responds_to["report_number"]))
+                    else:
+                        st.caption(f"Responds to Report #{target}, not in this dataset")
+                for a in atr_link["action_taken_reports"]:
+                    target = format_report_ref(a["report_number"], a["lok_sabha"], r.get("lok_sabha"))
+                    st.button(f"Action taken: Report #{target}", type="tertiary",
+                              key=f"atr_nav_{idx}_atr_{a['lok_sabha']}_{a['report_number']}",
+                              on_click=_focus_on, args=(a["lok_sabha"], a["report_number"]))
 
                 col_a, col_b = st.columns(2)
                 with col_a:
