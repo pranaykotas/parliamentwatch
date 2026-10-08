@@ -2271,7 +2271,7 @@
       "date_of_presentation": null,
       "date_of_adoption": null,
       "pdf_url": "https://sansad.in/getFile/app/lsscommittee/External Affairs/18_External_Affairs_18.pdf?source=app",
-      "pdf_url_hindi": null,
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/External Affairs/18_External_Affairs_18(hindi).pdf?source=app",
       "lok_sabha": 18,
       "house": "L"
     },
@@ -2286,7 +2286,7 @@
       "date_of_presentation": null,
       "date_of_adoption": null,
       "pdf_url": "https://sansad.in/getFile/app/lsscommittee/External Affairs/18_External_Affairs_17.pdf?source=app",
-      "pdf_url_hindi": null,
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/External Affairs/18_External_Affairs_17(hindi).pdf?source=app",
       "lok_sabha": 18,
       "house": "L"
     },
@@ -2301,7 +2301,7 @@
       "date_of_presentation": null,
       "date_of_adoption": null,
       "pdf_url": "https://sansad.in/getFile/app/lsscommittee/External Affairs/18_External_Affairs_16.pdf?source=app",
-      "pdf_url_hindi": null,
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/External Affairs/18_External_Affairs_16(hindi).pdf?source=app",
       "lok_sabha": 18,
       "house": "L"
     },
@@ -5578,6 +5578,21 @@
     }
   ],
   "housing": [
+    {
+      "committee": "housing",
+      "committee_name": "Housing and Urban Affairs",
+      "report_number": 13,
+      "title": "Thirteenth Report of the Standing Committee on Housing and Urban Affairs (2025-26) on the subject, ‘Census Criteria for Defining Urban Areas’.",
+      "presented_in_ls": null,
+      "laid_in_rs": null,
+      "presented_to_speaker": "25-Sep-2026",
+      "date_of_presentation": null,
+      "date_of_adoption": null,
+      "pdf_url": "https://sansad.in/getFile/app/lsscommittee/Housing and Urban Affairs/18_Housing_and_Urban_Affairs_13.pdf?source=app",
+      "pdf_url_hindi": "https://sansad.in/getFile/app/committee_hindi/Housing and Urban Affairs/18_Housing_and_Urban_Affairs_13(hindi).pdf?source=app",
+      "lok_sabha": 18,
+      "house": "L"
+    },
     {
       "committee": "housing",
       "committee_name": "Housing and Urban Affairs",
