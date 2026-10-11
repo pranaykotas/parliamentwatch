@@ -16,6 +16,7 @@ from scraper import (
 from pdf_utils import get_report_text
 from summarizer import summarize_report
 from committee_members import load_committee_members, fetch_all_committee_members
+from atr import atr_export_fields, build_atr_links, format_report_ref, get_atr_link, report_key
 
 # --- Page config ---
 st.set_page_config(
@@ -53,6 +54,10 @@ st.markdown("""
         margin-top: 3em;
     }
     .attribution a { color: #620D3C; text-decoration: none; }
+    /* ATR links (Committee Deep Dive and Report Details): buttons styled as links */
+    [class*="st-key-atr_nav_"] button { color: #620D3C; }
+    [class*="st-key-atr_nav_"] button p { color: #620D3C; text-decoration: underline; text-underline-offset: 3px; }
+    [class*="st-key-atr_nav_"] button:hover p { text-decoration-thickness: 2px; }
     .badge {
         display: inline-block;
         padding: 2px 8px;
@@ -218,9 +223,35 @@ def get_all_reports_flat():
 
 
 
+def render_atr_links(r, atr_links, key_prefix, on_select):
+    """Show which report an ATR responds to, and which ATRs respond to this report.
+
+    Reports in the dataset are link-style buttons; clicking one calls
+    on_select(lok_sabha, report_number). Keys start with atr_nav_ for the link CSS.
+    """
+    atr_link = get_atr_link(atr_links, r)
+    responds_to = atr_link["responds_to"]
+    if responds_to:
+        target = format_report_ref(responds_to["report_number"], responds_to["lok_sabha"], r.get("lok_sabha"))
+        if responds_to["in_data"]:
+            st.button(f"Responds to Report #{target}", type="tertiary",
+                      icon=":material/arrow_forward:", key=f"atr_nav_{key_prefix}_responds",
+                      on_click=on_select, args=(responds_to["lok_sabha"], responds_to["report_number"]))
+        else:
+            st.caption(f"Responds to Report #{target}, not in this dataset")
+    for a in atr_link["action_taken_reports"]:
+        target = format_report_ref(a["report_number"], a["lok_sabha"], r.get("lok_sabha"))
+        st.button(f"Action taken: Report #{target}", type="tertiary",
+                  icon=":material/arrow_forward:",
+                  key=f"atr_nav_{key_prefix}_atr_{a['lok_sabha']}_{a['report_number']}",
+                  on_click=on_select, args=(a["lok_sabha"], a["report_number"]))
+
+
 @st.dialog("Report Details", width="large")
 def show_report_dialog(r):
     """Show report details in a modal dialog with extract & summarize capability."""
+    # An ATR link swaps the dialog to the linked report without closing it.
+    r = st.session_state.get("dialog_report", r)
     committee_key = r.get("committee", "")
     committee_name = r.get("committee_name", "")
     report_num = r.get("report_number", "?")
@@ -229,6 +260,15 @@ def show_report_dialog(r):
 
     st.markdown(f"### {r.get('title', 'No title')}")
     st.markdown(category_badge(r.get("title", "")), unsafe_allow_html=True)
+
+    committee_reports = all_reports.get(committee_key, [])
+
+    def _show_linked(lok_sabha, report_number):
+        target_key = (committee_key, lok_sabha, report_number)
+        st.session_state["dialog_report"] = next(
+            x for x in committee_reports if report_key(committee_key, x) == target_key)
+
+    render_atr_links(r, build_atr_links({committee_key: committee_reports}), "dialog", _show_linked)
 
     col_a, col_b = st.columns(2)
     with col_a:
@@ -365,6 +405,7 @@ def clickable_report_table(reports_list, table_key, show_committee=True, show_pr
                 st.rerun()
             cols[1].caption(str(report_num))
             if cols[2].button(title[:120], key=f"{table_key}_{i}", type="tertiary"):
+                st.session_state.pop("dialog_report", None)
                 show_report_dialog(r)
             cols[3].caption(date)
             cols[4].markdown(badge, unsafe_allow_html=True)
@@ -372,6 +413,7 @@ def clickable_report_table(reports_list, table_key, show_committee=True, show_pr
             cols = st.columns([0.5, 5, 1, 1])
             cols[0].caption(str(report_num))
             if cols[1].button(title[:120], key=f"{table_key}_{i}", type="tertiary"):
+                st.session_state.pop("dialog_report", None)
                 show_report_dialog(r)
             cols[2].caption(date)
             cols[3].markdown(badge, unsafe_allow_html=True)
@@ -786,6 +828,9 @@ with tab_committee:
             dive_ls_filter = "All"
     selected_key = committee_options[selected_name]
     reports = all_reports[selected_key]
+    # Built from every report in the committee, so links survive the Lok Sabha filter.
+    atr_links = build_atr_links({selected_key: reports})
+    committee_reports = reports
     if dive_ls_filter != "All":
         reports = [r for r in reports if r.get("lok_sabha") == dive_ls_filter]
 
@@ -871,10 +916,24 @@ with tab_committee:
             filtered = sorted(filtered, key=lambda r: r.get("report_number", 0))
         # "Report # (desc)" is the default storage order, no re-sort needed
 
+        # Clicking an ATR link focuses the Deep Dive on that one report. The focus
+        # ignores the other filters, since the target may be outside them.
+        focus = st.session_state.get("dive_focus_report")
+        if focus and focus[0] == selected_key:
+            filtered = [r for r in committee_reports if report_key(selected_key, r) == focus]
+            st.button("Show all reports", key="dive_clear_focus",
+                      on_click=lambda: st.session_state.pop("dive_focus_report", None))
+        else:
+            st.session_state.pop("dive_focus_report", None)
+            focus = None
+
         st.caption(f"Showing {len(filtered)} of {len(reports)} reports")
 
+        def _focus_on(lok_sabha, report_number):
+            st.session_state["dive_focus_report"] = (selected_key, lok_sabha, report_number)
+
         # Display reports with expandable details
-        for r in filtered:
+        for idx, r in enumerate(filtered):
             date = format_report_date(r)
             category = classify_report(r.get("title", ""))
             house_label = "LS" if r.get("house") == "L" else ("RS" if r.get("house") == "R" else "")
@@ -890,8 +949,10 @@ with tab_committee:
 
             header = f"**#{report_num}** | {category} | {house_label} | {date}{status_str}"
 
-            with st.expander(header):
+            with st.expander(header, expanded=focus is not None):
                 st.write(r.get("title", "No title"))
+
+                render_atr_links(r, atr_links, idx, _focus_on)
 
                 col_a, col_b = st.columns(2)
                 with col_a:
@@ -1141,9 +1202,10 @@ with tab_export:
         export_keys = [next(k for k, v in DRSC_COMMITTEES.items() if v["name"] == export_committee_filter)]
 
     if export_type == "Report metadata":
+        atr_links = build_atr_links(all_reports)
         flat = []
         for k in export_keys:
-            flat.extend(all_reports.get(k, []))
+            flat.extend({**r, **atr_export_fields(r, atr_links)} for r in all_reports.get(k, []))
 
         if not flat:
             st.warning("No reports found.")
@@ -1154,6 +1216,7 @@ with tab_export:
             display_cols = [
                 "committee_name", "report_number", "title",
                 "presented_in_ls", "laid_in_rs", "lok_sabha", "house", "pdf_url",
+                "responds_to_report", "responds_to_lok_sabha", "action_taken_reports",
             ]
             available_cols = [c for c in display_cols if c in df.columns]
             df_export = df[available_cols]
